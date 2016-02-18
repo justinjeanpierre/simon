@@ -1,13 +1,17 @@
 #!/usr/bin/python
-import os
-import unittest
-import simon
 
-class SimonTestCase(unittest.TestCase):
-	
+import os	
+import unittest
+from src import simon
+
+class NewTestCase(unittest.TestCase):
+		
 	def setUp(self):
 		self.app = simon.app.test_client()
-				
+			
+#	def tearDown(self):
+#		nothing to tear down yet.
+		
 	def test_get_route(self):
 		response = self.app.get('/jobs')
 		assert 'this is a response to a GET request' in response.data
@@ -19,6 +23,6 @@ class SimonTestCase(unittest.TestCase):
 	def test_put_route(self):
 		response = self.app.put('/jobs')
 		assert 'this is a response to a PUT request' in response.data
-		
+
 if __name__ == '__main__':
 	unittest.main()

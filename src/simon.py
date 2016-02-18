@@ -25,6 +25,22 @@ def put_job():
 #	update some job status
 	return 'this is a response to a PUT request'	
 
+# users routes
+@app.route('/users', methods=['GET'])
+def get_users():
+#	get a user's details?
+	return 'this is a response to a GET request to /users'
+	
+@app.route('/users', methods=['POST'])
+def post_user():
+#	create a user
+	return 'this is a response to a POST request to /users'
+	
+@app.route('/users', methods=['PUT'])
+def put_user():
+#	update some user status
+	return 'this is a response to a PUT request to /users'	
+
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
 	app.run(host='0.0.0.0', port=port)
