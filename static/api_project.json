@@ -1,0 +1,1 @@
+{  "name": "simon",  "version": "0.0.1",  "description": "simon API documentation",  "template": {    "withCompare": false  },  "sampleUrl": false,  "apidoc": "0.2.0",  "generator": {    "name": "apidoc",    "time": "2016-02-20T23:44:29.364Z",    "url": "http://apidocjs.com",    "version": "0.15.1"  }}
