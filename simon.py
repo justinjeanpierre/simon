@@ -1,28 +1,43 @@
 #!/usr/bin/python
 
 import os
-from flask import Flask, request, redirect, url_for, send_from_directory
+from flask import Flask, request, url_for
+
 app = Flask(__name__, static_folder='')
 
-"""
-@api {get} /user/:id
-"""
 @app.route("/")
 def hello():
 	return "Hello World!"
 
+# here is some sample API documentation:
+"""
+@apiVersion 0.0.1
+"""
+
+"""
+@api {get} /user/:id Request User information
+@apiName GetUser
+@apiGroup User
+
+@apiParam {Number} id Users unique ID.
+
+@apiSuccess {String} firstname Firstname of the User.
+@apiSuccess {String} lastname  Lastname of the User.
+"""
+
+# the following routes 
+# handle serving apiDoc's
+# static files.
 @app.route('/docs')
 def show_docs():
 	return app.send_static_file('static/index.html')
 
-@app.route('/api_data.js')
+@app.route('/api_data.js') # what about the request string?
 def send_api_data():
-	print 'static/api_data.js?' + request.query_string
 	return app.send_static_file('static/api_data.js')
 
-@app.route('/api_project.js')
+@app.route('/api_project.js') # what about the request string?
 def send_api_project():
-	print 'static/api_project.js?' + request.query_string
 	return app.send_static_file('static/api_project.js')
 
 @app.route('/css/<filename>')
