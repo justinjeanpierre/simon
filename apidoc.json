@@ -1,0 +1,8 @@
+{
+	"name": "simon",
+	"version": "0.0.1",
+	"description": "API documentation",
+	"template": {
+		"withCompare": false
+	}
+}
