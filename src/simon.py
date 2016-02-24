@@ -83,9 +83,42 @@ def oauthorized():
 @apiSuccess {String} lastname  Lastname of the User.
 """
 
-# the following routes 
-# handle serving apiDoc's
-# static files.
+# jobs routes
+@app.route('/jobs', methods=['GET'])
+def get_jobs():
+#	get a list of all jobs
+#	(...to which this authenticated user has access)
+    return 'this is a response to a GET request'
+    
+@app.route('/jobs', methods=['POST'])
+def post_job():
+#	create a job
+    return 'this is a response to a POST request'
+    
+@app.route('/jobs', methods=['PUT'])
+def put_job():
+#	update some job status
+    return 'this is a response to a PUT request'	
+
+# users routes
+@app.route('/users', methods=['GET'])
+def get_users():
+#	get a user's details?
+    return 'this is a response to a GET request to /users'
+    
+@app.route('/users', methods=['POST'])
+def post_user():
+#	create a user
+    return 'this is a response to a POST request to /users'
+    
+@app.route('/users', methods=['PUT'])
+def put_user():
+#	update some user status
+    return 'this is a response to a PUT request to /users'	
+
+# The following routes handle serving apiDoc's static files.
+# This is brittle and we should find a better way to serve
+# templates and static files.
 @app.route('/docs')
 def show_docs():
 	return render_template('docs.html')
@@ -113,6 +146,10 @@ def send_utils(filename):
 @app.route('/vendor/<path:filename>')
 def send_vendor(filename):
 	return app.send_static_file('static/' + url_for('static', filename='vendor/' + filename))
+
+@app.route('/img/<path:filename>')
+def send_image(filename):
+    return app.send_static_file('static/' + url_for('static', filename='img/' + filename))
 
 @app.route('/main.js')
 def send_main_js():
