@@ -116,9 +116,9 @@ def put_user():
 #	update some user status
     return 'this is a response to a PUT request to /users'	
 
-# the following routes 
-# handle serving apiDoc's
-# static files.
+# The following routes handle serving apiDoc's static files.
+# This is brittle and we should find a better way to serve
+# templates and static files.
 @app.route('/docs')
 def show_docs():
 	return render_template('docs.html')
@@ -146,6 +146,10 @@ def send_utils(filename):
 @app.route('/vendor/<path:filename>')
 def send_vendor(filename):
 	return app.send_static_file('static/' + url_for('static', filename='vendor/' + filename))
+
+@app.route('/img/<path:filename>')
+def send_image(filename):
+    return app.send_static_file('static/' + url_for('static', filename='img/' + filename))
 
 @app.route('/main.js')
 def send_main_js():
