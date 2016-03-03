@@ -49,6 +49,7 @@ def index():
             flash('Unable to load tweets from Twitter.')
     return render_template('index.html', tweets=tweets)
 
+
 @app.route('/login')
 def login():
     callback_url = url_for('oauthorized', next=request.args.get('next'))
