@@ -2,27 +2,31 @@
 
 import os	
 import unittest
-from src import simon
+import simon
 
-class NewTestCase(unittest.TestCase):
+class JobsRouteTestCase(unittest.TestCase):
 		
 	def setUp(self):
 		self.app = simon.app.test_client()
 			
-#	def tearDown(self):
-#		nothing to tear down yet.
-		
-	def test_get_route(self):
+	def test_get_jobs(self):
 		response = self.app.get('/jobs')
+		
 		assert 'this is a response to a GET request' in response.data
-		
-	def test_post_route(self):
+		assert response.status == '200 OK'
+
+	def test_post_job(self):
 		response = self.app.post('/jobs')
-		assert 'this is a response to a POST request' in response.data
 		
-	def test_put_route(self):
+		assert 'this is a response to a POST request' in response.data
+		assert response.status == '200 OK'
+
+	def test_put_job(self):
 		response = self.app.put('/jobs')
+		
 		assert 'this is a response to a PUT request' in response.data
+		assert response.status == '200 OK'
+
 
 if __name__ == '__main__':
 	unittest.main()
