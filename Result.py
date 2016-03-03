@@ -5,7 +5,8 @@ class Result:
 		self.id = "" # string?
 		self.owner = "" # the corresponding job for this set of results
 		self.status = "" # some type ?
-
+		self.job_params = {}
+				
 	def create(self):
 		# triggered by response from simulator
 		# user should not be able to create a Result

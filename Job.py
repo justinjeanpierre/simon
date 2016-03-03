@@ -5,6 +5,7 @@ class Job:
 		self.id = "" # string?
 		self.owner = "" # string
 		self.status = "" # ?type?
+		self.job_params = {}
 		
 	def update(self):
 		# add params from user's input
