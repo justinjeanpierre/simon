@@ -88,24 +88,48 @@ def oauthorized():
 def get_jobs():
 #	get a list of all jobs
 #	(...to which this authenticated user has access)
-    return 'this is a response to a GET request'
+    return 'this is a response to a GET request', 200
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
 #	create a job
-    return 'this is a response to a POST request'
+    return 'this is a response to a POST request', 200
     
 @app.route('/jobs', methods=['PUT'])
 def put_job():
-#	update some job status
-    return 'this is a response to a PUT request'	
+#	update some job's status
+    return 'this is a response to a PUT request', 200
+    
+@app.route('/jobs', methods=['PUT'])
+def delete_job():
+#	delete a job
+    return 'this is a response to a DELETE request', 200
+    
+# results routes
+@app.route('/results', methods=['GET'])
+def get_results():
+#	get a list of all results
+#	(...to which this authenticated user has access)
+    return 'this is a response to a GET request to /results', 200
+
+# stats routes
+@app.route('/stats', methods=['GET'])
+def get_stats():
+#	get the dashboard?
+    return 'this is a response to a GET request to /stats', 200
+
+# show the documentation
+@app.route('/docs', methods=['GET'])
+def show_docs():
+    return 'unimplemented', 501
+
 
 # The following routes handle serving apiDoc's static files.
 # This is brittle and we should find a better way to serve
 # templates and static files.
-@app.route('/docs')
-def show_docs():
-	return render_template('docs.html')
+#@app.route('/docs')
+#def show_docs():
+#	return render_template('docs.html')
 
 @app.route('/api_data.js') # what about the request string?
 def send_api_data():
