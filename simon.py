@@ -6,6 +6,7 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
 from flask_bootstrap import Bootstrap
+from flask.ext.pymongo import PyMongo
 
 app = Flask(__name__)
 app.debug = True
