@@ -8,11 +8,13 @@ from flask_oauthlib.client import OAuth
 from flask_bootstrap import Bootstrap
 from flask.ext.pymongo import PyMongo
 
+import Config
+
 app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-Bootstrap(app)
+app.config.from_object(Config.DevelopmentConfig)
 
 twitter = oauth.remote_app(
     'twitter',
