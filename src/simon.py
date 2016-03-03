@@ -125,37 +125,37 @@ def put_user():
 def show_docs():
 	return render_template('bootdoc.html')
 
-@app.route('/api_data.js') # what about the request string?
-def send_api_data():
-	return app.send_static_file('static/api_data.js')
-
-@app.route('/api_project.js') # what about the request string?
-def send_api_project():
-	return app.send_static_file('static/api_project.js')
-
-@app.route('/css/<filename>')
-def send_css(filename):
-	return app.send_static_file('static/' + url_for('static', filename='css/' + filename))
-
-@app.route('/locales/<path:filename>')
-def send_locales(filename):
-	return app.send_static_file('static/' + url_for('static', filename='locales/' + filename))
-
-@app.route('/utils/<path:filename>')
-def send_utils(filename):
-	return app.send_static_file('static/' + url_for('static', filename='utils/' + filename))
-
-@app.route('/vendor/<path:filename>')
-def send_vendor(filename):
-	return app.send_static_file('static/' + url_for('static', filename='vendor/' + filename))
-
-@app.route('/img/<path:filename>')
-def send_image(filename):
-    return app.send_static_file('static/' + url_for('static', filename='img/' + filename))
-
-@app.route('/main.js')
-def send_main_js():
-	return app.send_static_file('static/main.js')
+#@app.route('/api_data.js') # what about the request string?
+#def send_api_data():
+#	return app.send_static_file('static/api_data.js')
+#
+#@app.route('/api_project.js') # what about the request string?
+#def send_api_project():
+#	return app.send_static_file('static/api_project.js')
+#
+#@app.route('/css/<filename>')
+#def send_css(filename):
+#	return app.send_static_file('static/' + url_for('static', filename='css/' + filename))
+#
+#@app.route('/locales/<path:filename>')
+#def send_locales(filename):
+#	return app.send_static_file('static/' + url_for('static', filename='locales/' + filename))
+#
+#@app.route('/utils/<path:filename>')
+#def send_utils(filename):
+#	return app.send_static_file('static/' + url_for('static', filename='utils/' + filename))
+#
+#@app.route('/vendor/<path:filename>')
+#def send_vendor(filename):
+#	return app.send_static_file('static/' + url_for('static', filename='vendor/' + filename))
+#
+#@app.route('/img/<path:filename>')
+#def send_image(filename):
+#    return app.send_static_file('static/' + url_for('static', filename='img/' + filename))
+#
+#@app.route('/main.js')
+#def send_main_js():
+#	return app.send_static_file('static/main.js')
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
