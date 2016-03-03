@@ -105,7 +105,7 @@ def put_user():
 # show the documentation
 @app.route('/docs')
 def show_docs():
-	return render_template('bootdoc.html')
+    return 'unimplemented'
 
 	
 if __name__ == "__main__":
