@@ -5,11 +5,13 @@ from flask import Flask
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+Bootstrap(app)
 
 twitter = oauth.remote_app(
     'twitter',
@@ -67,22 +69,6 @@ def oauthorized():
         session['twitter_oauth'] = resp
     return redirect(url_for('index'))
 
-# here is some sample API documentation:
-"""
-@apiVersion 0.0.1
-"""
-
-"""
-@api {get} /user/:id Request User information
-@apiName GetUser
-@apiGroup User
-
-@apiParam {Number} id Users unique ID.
-
-@apiSuccess {String} firstname Firstname of the User.
-@apiSuccess {String} lastname  Lastname of the User.
-"""
-
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
@@ -116,44 +102,11 @@ def put_user():
 #	update some user status
     return 'this is a response to a PUT request to /users'	
 
-# The following routes handle serving apiDoc's static files.
-# This is brittle and we should find a better way to serve
-# templates and static files.
+# show the documentation
 @app.route('/docs')
 def show_docs():
-	return render_template('docs.html')
+    return 'unimplemented'
 
-@app.route('/api_data.js') # what about the request string?
-def send_api_data():
-	return app.send_static_file('static/api_data.js')
-
-@app.route('/api_project.js') # what about the request string?
-def send_api_project():
-	return app.send_static_file('static/api_project.js')
-
-@app.route('/css/<filename>')
-def send_css(filename):
-	return app.send_static_file('static/' + url_for('static', filename='css/' + filename))
-
-@app.route('/locales/<path:filename>')
-def send_locales(filename):
-	return app.send_static_file('static/' + url_for('static', filename='locales/' + filename))
-
-@app.route('/utils/<path:filename>')
-def send_utils(filename):
-	return app.send_static_file('static/' + url_for('static', filename='utils/' + filename))
-
-@app.route('/vendor/<path:filename>')
-def send_vendor(filename):
-	return app.send_static_file('static/' + url_for('static', filename='vendor/' + filename))
-
-@app.route('/img/<path:filename>')
-def send_image(filename):
-    return app.send_static_file('static/' + url_for('static', filename='img/' + filename))
-
-@app.route('/main.js')
-def send_main_js():
-	return app.send_static_file('static/main.js')
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
