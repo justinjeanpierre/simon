@@ -5,11 +5,13 @@ from flask import Flask
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+Bootstrap(app)
 
 twitter = oauth.remote_app(
     'twitter',
@@ -121,7 +123,7 @@ def put_user():
 # templates and static files.
 @app.route('/docs')
 def show_docs():
-	return render_template('docs.html')
+	return render_template('bootdoc.html')
 
 @app.route('/api_data.js') # what about the request string?
 def send_api_data():
