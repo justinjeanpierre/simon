@@ -1,1 +1,1 @@
-web: python src/simon.py
+web: python simon.py
