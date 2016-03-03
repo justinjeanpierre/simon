@@ -13,6 +13,7 @@
 <body>
 
 <script id="template-sidenav" type="text/x-handlebars-template">
+{% raw %}
 <nav id="scrollingNav">
   <ul class="sidenav nav nav-list">
   {{#each nav}}
@@ -652,6 +653,7 @@
     <p>Loading...</p>
   </div>
 </div>
+{% endraw %}
 
 <script data-main="main.js" src="vendor/require.min.js"></script>
 </body>
