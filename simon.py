@@ -100,22 +100,6 @@ def put_job():
 #	update some job status
     return 'this is a response to a PUT request'	
 
-# users routes
-@app.route('/users', methods=['GET'])
-def get_users():
-#	get a user's details?
-    return 'this is a response to a GET request to /users'
-    
-@app.route('/users', methods=['POST'])
-def post_user():
-#	create a user
-    return 'this is a response to a POST request to /users'
-    
-@app.route('/users', methods=['PUT'])
-def put_user():
-#	update some user status
-    return 'this is a response to a PUT request to /users'	
-
 # The following routes handle serving apiDoc's static files.
 # This is brittle and we should find a better way to serve
 # templates and static files.
