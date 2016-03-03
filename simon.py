@@ -74,38 +74,40 @@ def oauthorized():
 def get_jobs():
 #	get a list of all jobs
 #	(...to which this authenticated user has access)
-    return 'this is a response to a GET request'
+    return 'this is a response to a GET request', 200
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
 #	create a job
-    return 'this is a response to a POST request'
+    return 'this is a response to a POST request', 200
     
 @app.route('/jobs', methods=['PUT'])
 def put_job():
-#	update some job status
-    return 'this is a response to a PUT request'	
+#	update some job's status
+    return 'this is a response to a PUT request', 200
+    
+@app.route('/jobs', methods=['PUT'])
+def delete_job():
+#	delete a job
+    return 'this is a response to a DELETE request', 200
+    
+# results routes
+@app.route('/results', methods=['GET'])
+def get_results():
+#	get a list of all results
+#	(...to which this authenticated user has access)
+    return 'this is a response to a GET request to /results', 200
 
-# users routes
-@app.route('/users', methods=['GET'])
-def get_users():
-#	get a user's details?
-    return 'this is a response to a GET request to /users'
-    
-@app.route('/users', methods=['POST'])
-def post_user():
-#	create a user
-    return 'this is a response to a POST request to /users'
-    
-@app.route('/users', methods=['PUT'])
-def put_user():
-#	update some user status
-    return 'this is a response to a PUT request to /users'	
+# stats routes
+@app.route('/stats', methods=['GET'])
+def get_stats():
+#	get the dashboard?
+    return 'this is a response to a GET request to /stats', 200
 
 # show the documentation
-@app.route('/docs')
+@app.route('/docs', methods=['GET'])
 def show_docs():
-    return 'unimplemented'
+    return 'unimplemented', 501
 
 	
 if __name__ == "__main__":
