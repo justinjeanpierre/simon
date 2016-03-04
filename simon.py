@@ -82,7 +82,12 @@ def get_jobs():
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-#	create a job
+#	to submit a job:
+    
+    # get request parameters (form data?)
+    # create object, populate with request data
+    # save in db
+    # serialize and send to simulator
     return 'this is a response to a POST request', 200
     
 @app.route('/jobs', methods=['PUT'])
