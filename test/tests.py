@@ -10,6 +10,7 @@ from docs_route_tests import DocumentationRoutesTestCase
 from stats_route_tests import StatsRoutesTestCase
 from Job_tests import JobTestCase
 from Result_tests import ResultTestCase
+from SimParamsTest import SimulatorParametersTestCase
 
 def test_suite():
 	test_suite = unittest.TestSuite()
@@ -20,6 +21,7 @@ def test_suite():
 	test_suite.addTest(unittest.makeSuite(StatsRoutesTestCase))
 	test_suite.addTest(unittest.makeSuite(JobTestCase))
 	test_suite.addTest(unittest.makeSuite(ResultTestCase))
+	test_suite.addTest(unittest.makeSuite(SimulatorParametersTestCase))
 	
 	return test_suite
 

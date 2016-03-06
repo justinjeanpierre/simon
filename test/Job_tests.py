@@ -2,18 +2,22 @@
 
 import os	
 import unittest
-import simon
 import Job
+import SimulatorParameters
 
 class JobTestCase(unittest.TestCase):
 		
 	def setUp(self):
-		self.app = simon.app.test_client()
 		self.job = Job.Job()
 		
 	def tearDown(self):
 		# destroy test db
 		pass
+		
+	def test_default_params(self):
+		d = self.job.simulator_parameters
+
+		assert d['GENERAL_OUTPUT_FILE'] == 'sim.out'
 					
 	def test_store_job(self):
 		# store a job in the db
@@ -34,6 +38,7 @@ class JobTestCase(unittest.TestCase):
 #		assert self.job.simulator_parameters['TOTAL_CORES'] == 12
 #		self.job.update({'TOTAL_CORES'})
 #		assert self.job.simulator_parameters['TOTAL_CORES'] == None
+		pass
 		
 	def test_delete_job(self):
 		pass

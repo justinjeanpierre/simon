@@ -2,12 +2,12 @@
 
 import os	
 import unittest
-import simon
+import Result
 
 class ResultTestCase(unittest.TestCase):
 		
 	def setUp(self):
-		self.app = simon.app.test_client()
+		pass
 		
 	def tearDown(self):
 		# destroy test db
