@@ -13,3 +13,6 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
 	# dev db
 	MONGO_DBNAME = 'simon_dev'
+
+class TestingConfig(Config):
+	MONGO_DBNAME = 'simon_test'
