@@ -10,7 +10,8 @@ from flask.ext.pymongo import PyMongo
 
 import Config
 
-app = Flask(__name__)
+template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
+app = Flask(__name__, template_folder=template_dir)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
@@ -51,12 +52,14 @@ def index():
             flash('Unable to load tweets from Twitter.')
     return render_template('index.html', tweets=tweets)
 
-
-@app.route('/login')
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
+    return render_template('login.html')
+
+@app.route('/twitter/')
+def twitter_login():
     callback_url = url_for('oauthorized', next=request.args.get('next'))
     return twitter.authorize(callback=callback_url or request.referrer or None)
-
 
 @app.route('/logout')
 def logout():
@@ -76,8 +79,8 @@ def oauthorized():
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#	get a list of all jobs
-#	(...to which this authenticated user has access)
+#   get a list of all jobs
+#   (...to which this authenticated user has access)
     return 'this is a response to a GET request', 200
     
 @app.route('/jobs', methods=['POST'])
@@ -92,25 +95,26 @@ def post_job():
     
 @app.route('/jobs', methods=['PUT'])
 def put_job():
-#	update some job's status
+#   update some job's status
     return 'this is a response to a PUT request', 200
     
 @app.route('/jobs', methods=['PUT'])
 def delete_job():
-#	delete a job
+#   delete a job
     return 'this is a response to a DELETE request', 200
     
 # results routes
 @app.route('/results', methods=['GET'])
 def get_results():
-#	get a list of all results
-#	(...to which this authenticated user has access)
+#   get a list of all results
+#   (...to which this authenticated user has access)
+
     return 'this is a response to a GET request to /results', 200
 
 # stats routes
 @app.route('/stats', methods=['GET'])
 def get_stats():
-#	get the dashboard?
+#   get the dashboard?
     return 'this is a response to a GET request to /stats', 200
 
 # show the documentation

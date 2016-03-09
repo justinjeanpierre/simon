@@ -1,16 +1,12 @@
-{% extends "layout.html" %}
-{% block body %}
-  {% if g.user %}
-    <p>
-      Hello {{ g.user.screen_name }}!  Wanna tweet something?
-    </p>
-  {% else %}
-    <p>
-      Sign in to start the fun!
-    </p>
-    <p>
-      <a href="{{ url_for('login') }}"><img src="{{
-        url_for('static', filename='sign-in.png') }}" alt="sign in"></a>
-    </p>
-  {% endif %}
+{% extends 'base.html' %}
+
+{% block full_title %}Simon{% endblock %}
+
+{% block content %}
+  <div class="row"><div class="col-md-12">
+    <div class="jumbotron">
+      <h2>Hi there!</h2>
+      <p>Welcome to Simon, the best multicore graphite simulator on the web!</p>
+    </div>
+  </div></div>
 {% endblock %}
