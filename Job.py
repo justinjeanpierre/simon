@@ -13,7 +13,6 @@ class Job:
 		# add params from user's input
 		# (will accept dictionary of parameters)
 		keys = dict.keys()
-		print keys
 
 	def submit(self):
 		# save user input and send to simulator
