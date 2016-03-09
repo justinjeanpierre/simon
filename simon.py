@@ -5,12 +5,14 @@ from flask import Flask
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
+from flask_bootstrap import Bootstrap
 
 template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
 app = Flask(__name__, template_folder=template_dir)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+Bootstrap(app)
 
 twitter = oauth.remote_app(
     'twitter',
@@ -80,7 +82,7 @@ def get_jobs():
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-#   create a job
+#	create a job
     return 'this is a response to a POST request', 200
     
 @app.route('/jobs', methods=['PUT'])
@@ -98,6 +100,7 @@ def delete_job():
 def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
+
     return 'this is a response to a GET request to /results', 200
 
 # stats routes
@@ -110,6 +113,7 @@ def get_stats():
 @app.route('/docs', methods=['GET'])
 def show_docs():
     return 'unimplemented', 501
+
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
