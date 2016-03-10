@@ -80,18 +80,23 @@ def get_jobs():
 #   (...to which this authenticated user has access)
     return 'this is a response to a GET request', 200
     
-@app.route('/jobs', methods=['POST'])
-def post_job():
+@app.route('/jobs/<job_id>', methods=['GET'])
+def get_job(job_id):
+#   get a specific job
+    return job_id, 200
+    
+@app.route('/jobs/<job_id>', methods=['POST'])
+def post_job(job_id):
 #	create a job
     return 'this is a response to a POST request', 200
     
-@app.route('/jobs', methods=['PUT'])
-def put_job():
+@app.route('/jobs/<job_id>', methods=['PUT'])
+def put_job(job_id):
 #   update some job's status
     return 'this is a response to a PUT request', 200
     
-@app.route('/jobs', methods=['PUT'])
-def delete_job():
+@app.route('/jobs/<job_id>', methods=['DELETE'])
+def delete_job(job_id):
 #   delete a job
     return 'this is a response to a DELETE request', 200
     
