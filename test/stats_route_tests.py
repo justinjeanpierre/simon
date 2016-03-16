@@ -11,8 +11,7 @@ class StatsRoutesTestCase(unittest.TestCase):
 			
 	def test_get_stats(self):
 		response = self.app.get('/stats')
-		assert 'this is a response to a GET request to /stats' in response.data
-		assert response.status == '200 OK'
+		assert response.status == '501 NOT IMPLEMENTED'
 		
 
 if __name__ == '__main__':
