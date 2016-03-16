@@ -14,6 +14,11 @@ class ResultsRoutesTestCase(unittest.TestCase):
 		
 		assert response.status == '501 NOT IMPLEMENTED'
 		
+	def test_get_result(self):
+		response = self.app.get('/results/987')
+		
+		assert response.status == '501 NOT IMPLEMENTED'
+
 
 if __name__ == '__main__':
 	unittest.main()
