@@ -81,27 +81,32 @@ def oauthorized():
 def get_jobs():
 #   get a list of all jobs
 #   (...to which this authenticated user has access)
-    return 'this is a response to a GET request', 200
+    return '', 501
+   
+@app.route('/jobs/<job_id>', methods=['GET'])
+def get_job(job_id):
+#   get a specific job
+    return job_id, 501
     
-@app.route('/jobs', methods=['POST'])
-def post_job():
+@app.route('/jobs/<job_id>', methods=['POST'])
+def post_job(job_id):
 #	to submit a job:
     
     # get request parameters (form data?)
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
-    return 'this is a response to a POST request', 200
+    return job_id, 501
     
-@app.route('/jobs', methods=['PUT'])
-def put_job():
+@app.route('/jobs/<job_id>', methods=['PUT'])
+def put_job(job_id):
 #   update some job's status
-    return 'this is a response to a PUT request', 200
+    return job_id, 501
     
-@app.route('/jobs', methods=['PUT'])
-def delete_job():
+@app.route('/jobs/<job_id>', methods=['DELETE'])
+def delete_job(job_id):
 #   delete a job
-    return 'this is a response to a DELETE request', 200
+    return job_id, 501
     
 # results routes
 @app.route('/results', methods=['GET'])
@@ -109,18 +114,24 @@ def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
 
-    return 'this is a response to a GET request to /results', 200
+    return '', 501
+
+@app.route('/results/<result_id>', methods=['GET'])
+def get_result(result_id):
+#   get one of the user's results
+
+    return result_id, 501
 
 # stats routes
 @app.route('/stats', methods=['GET'])
 def get_stats():
 #   get the dashboard?
-    return 'this is a response to a GET request to /stats', 200
+    return '', 501
 
 # show the documentation
 @app.route('/docs', methods=['GET'])
 def show_docs():
-    return 'unimplemented', 501
+    return '', 501
 
 	
 if __name__ == "__main__":
