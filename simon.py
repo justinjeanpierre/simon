@@ -2,10 +2,15 @@
 
 import os
 from flask import Flask
+# static files
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
+# OAuth
 from flask_oauthlib.client import OAuth
+# Bootstrap
 from flask_bootstrap import Bootstrap
+# Mongo and persistence
+from flask.ext.pymongo import PyMongo
 
 template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
 app = Flask(__name__, template_folder=template_dir)
@@ -13,6 +18,10 @@ app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 Bootstrap(app)
+
+# persistence
+mongo = PyMongo(app)
+
 
 twitter = oauth.remote_app(
     'twitter',
@@ -107,6 +116,12 @@ def get_results():
 #   (...to which this authenticated user has access)
 
     return 'this is a response to a GET request to /results', 200
+
+@app.route('/results/<result_id>', methods=['GET'])
+def get_result(result_id):
+#   get one of the user's results
+
+    return 'this is a response to a GET request to /results/<result_id>', 200
 
 # stats routes
 @app.route('/stats', methods=['GET'])
