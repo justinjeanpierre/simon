@@ -23,7 +23,7 @@ class JobsRouteTestCase(unittest.TestCase):
 		response = self.app.get('/jobs/123')
 		
 		assert '123' in response.data
-		assert response.status == '200 OK'
+		assert response.status == '501 NOT IMPLEMENTED'
 
 	def test_post_job(self):
 		response = self.app.post('/jobs/234')
