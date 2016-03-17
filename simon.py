@@ -123,12 +123,6 @@ def get_result(result_id):
 
     return result_id, 501
 
-@app.route('/results/<result_id>', methods=['GET'])
-def get_result(result_id):
-#   get one of the user's results
-
-    return 'this is a response to a GET request to /results/<result_id>', 200
-
 # stats routes
 @app.route('/stats', methods=['GET'])
 def get_stats():
