@@ -16,8 +16,7 @@ from flask.ext.pymongo import PyMongo
 import Job
 import Config
 
-template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
-app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
