@@ -8,6 +8,7 @@ from flask_oauthlib.client import OAuth
 from flask_bootstrap import Bootstrap
 from flask.ext.pymongo import PyMongo
 
+import Job
 import Config
 
 template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
@@ -96,6 +97,9 @@ def post_job(job_id):
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
+    job = Job.Job()
+    job.update(request.form)
+    
     return job_id, 501
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
