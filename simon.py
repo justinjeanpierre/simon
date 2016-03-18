@@ -97,8 +97,8 @@ def get_job(job_id):
 #   get a specific job
     return job_id, 501
     
-@app.route('/jobs/<job_id>', methods=['POST'])
-def post_job(job_id):
+@app.route('/jobs', methods=['POST'])
+def post_job():
 #	to submit a job:
     
     # get request parameters (form data?)
@@ -108,7 +108,7 @@ def post_job(job_id):
     job = Job.Job()
     job.update(request.form)
     
-    return job_id, 501
+    return '', 501
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):

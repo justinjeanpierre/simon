@@ -18,6 +18,8 @@ class JobTestCase(unittest.TestCase):
 		d = self.job.simulator_parameters
 
 		assert d['GENERAL_OUTPUT_FILE'] == 'sim.out'
+		assert d['GENERAL_TOTAL_CORES'] == 64
+		assert d['GENERAL_ENABLE_MODELING_CORE'] == True
 					
 	def test_store_job(self):
 		# store a job in the db

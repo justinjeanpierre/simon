@@ -17,18 +17,18 @@ class JobsRouteTestCase(unittest.TestCase):
 	def test_get_job(self):
 		response = self.app.get('/jobs/123')
 		
-		assert response.status == '501 NOT IMPLEMENTED'
-
-	def test_get_job(self):
-		response = self.app.get('/jobs/123')
-		
 		assert '123' in response.data
 		assert response.status == '501 NOT IMPLEMENTED'
 
 	def test_post_job(self):
-		response = self.app.post('/jobs/234')
+		response = self.app.post('/jobs')
 		
 		assert response.status == '501 NOT IMPLEMENTED'
+
+#	def test_post_job_with_params(self):
+#		response = self.app.post('/jobs/234')
+#		
+#		assert response.status == '501 NOT IMPLEMENTED'
 
 	def test_put_job(self):
 		response = self.app.put('/jobs/345')
