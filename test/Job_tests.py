@@ -21,30 +21,11 @@ class JobTestCase(unittest.TestCase):
 		assert d['GENERAL_TOTAL_CORES'] == 64
 		assert d['GENERAL_ENABLE_MODELING_CORE'] == True
 					
-	def test_store_job(self):
-		# store a job in the db
-		pass
-		
-	def test_retrieve_job(self):
-		# get a job back from the test/dev db
-		pass
-		
 	def test_empty_param_handling(self):
 		# should evaluate what we do with keys that are not found
 		# or have values that are None or nil or empty
 		pass
-		
-	def test_update_job(self):
-		# validate parameters
-#		self.job.update({'TOTAL_CORES':12})
-#		assert self.job.simulator_parameters['TOTAL_CORES'] == 12
-#		self.job.update({'TOTAL_CORES'})
-#		assert self.job.simulator_parameters['TOTAL_CORES'] == None
-		pass
-		
-	def test_delete_job(self):
-		pass
-		
+				
 
 if __name__ == '__main__':
 	unittest.main()
