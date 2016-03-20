@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import SimulatorParameters
+from flask.ext.pymongo import PyMongo
 
 class Job:
 	def __init__(self):
@@ -31,3 +32,22 @@ class Job:
 		# cancel simulation (if in progress)
 		# and delete it from the database
 		pass
+
+	@classmethod
+	def find_job(_class, job_id, mongoCollection = None):
+		# this function returns an instance of Job 
+		# if one was found in the db with a matching job_id
+		#
+		# (you should pass in a Mongo collction if you have one)
+		
+		retval = _class() # empty Job to be returned later
+		
+		if mongoCollection == None:
+			# maybe handle this situation a bit better..?
+			return retval
+
+		res = mongoCollection.find_one({'identifier':job_id})
+		if res is not None:
+			retval.id = res['identifier']
+		
+		return retval
