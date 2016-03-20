@@ -4,14 +4,15 @@
 import unittest
 
 # imports from project
-from jobs_route_tests import JobsRouteTestCase
-from results_route_tests import ResultsRoutesTestCase
-from docs_route_tests import DocumentationRoutesTestCase
-from stats_route_tests import StatsRoutesTestCase
-from Job_tests import JobTestCase
-from Result_tests import ResultTestCase
-from SimParamsTest import SimulatorParametersTestCase
+from JobsRouteTests import JobsRouteTestCase
+from ResultsRouteTests import ResultsRoutesTestCase
+from DocumentationRouteTests import DocumentationRoutesTestCase
+from StatisticsRouteTests import StatsRoutesTestCase
+from JobTests import JobTestCase
+from ResultTests import ResultTestCase
+from SimulatorParametersTest import SimulatorParametersTestCase
 from PersistenceTests import PersistenceTestCase
+
 def test_suite():
 	test_suite = unittest.TestSuite()
 	
