@@ -143,7 +143,7 @@ def get_stats():
 # show the documentation
 @app.route('/docs', methods=['GET'])
 def show_docs():
-    return '', 501
+    return render_template('docs.html')
 
 	
 if __name__ == "__main__":
