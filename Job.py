@@ -13,11 +13,10 @@ class Job:
 	def update(self, dict):
 		# add params from user's input
 		# (will accept dictionary of parameters)
-		keys = dict.keys()
 		
 		# load supplied values
 
-		for key in keys:
+		for key in dict.keys():
 			for k in self.simulator_parameters:
 				if k == key:
 					#figure out types (num -> num, string -> string, etc.)
@@ -25,14 +24,18 @@ class Job:
 					self.simulator_parameters[k] = dict[key]
 		
 	def submit(self):
-		# save user input and send to simulator
+		# save user input
+		# send to simulator
 		pass
 		
 	def cancel(self):
-		# cancel simulation (if in progress)
-		# and delete it from the database
+		# just delete it from the database
+		# controller route method will tell simulator
 		pass
 
+	def save(self, mongoCollection = None):
+		return mongoCollection.insert_one({'identifier':self.id, 'simulator_parameters':self.simulator_parameters})
+		
 	@classmethod
 	def find_job(_class, job_id, mongoCollection = None):
 		# this function returns an instance of Job 
@@ -40,7 +43,7 @@ class Job:
 		#
 		# (you should pass in a Mongo collction if you have one)
 		
-		retval = _class() # empty Job to be returned later
+		retval = Job() # empty Job to be returned later
 		
 		if mongoCollection == None:
 			# maybe handle this situation a bit better..?
@@ -49,5 +52,7 @@ class Job:
 		res = mongoCollection.find_one({'identifier':job_id})
 		if res is not None:
 			retval.id = res['identifier']
+			# validate then uncomment this
+#			retval.simulator_parameters = res['simulator_parameters']
 		
 		return retval
