@@ -9,6 +9,10 @@ from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
 # Bootstrap
 from flask_bootstrap import Bootstrap
+from flask.ext.pymongo import PyMongo
+
+import Job
+import Config
 
 # Mongo and persistence
 from flask.ext.pymongo import PyMongo
