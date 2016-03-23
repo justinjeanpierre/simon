@@ -6,13 +6,17 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
 from flask_bootstrap import Bootstrap
+from flask.ext.pymongo import PyMongo
+
+import Job
+import Config
 
 template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
 app = Flask(__name__, template_folder=template_dir)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-Bootstrap(app)
+app.config.from_object(Config.DevelopmentConfig)
 
 twitter = oauth.remote_app(
     'twitter',
@@ -87,7 +91,15 @@ def get_job(job_id):
     
 @app.route('/jobs/<job_id>', methods=['POST'])
 def post_job(job_id):
-#	create a job
+#	to submit a job:
+    
+    # get request parameters (form data?)
+    # create object, populate with request data
+    # save in db
+    # serialize and send to simulator
+    job = Job.Job()
+    job.update(request.form)
+    
     return job_id, 501
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
