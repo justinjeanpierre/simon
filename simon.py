@@ -2,21 +2,36 @@
 
 import os
 from flask import Flask
+# static files
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
+# OAuth
 from flask_oauthlib.client import OAuth
+# Bootstrap
 from flask_bootstrap import Bootstrap
 from flask.ext.pymongo import PyMongo
 
 import Job
 import Config
 
-template_dir = os.path.abspath('C:\Users\user-zaki\Documents\GitHub\simon\src\\templates')
-app = Flask(__name__, template_folder=template_dir)
+# Mongo and persistence
+from flask.ext.pymongo import PyMongo
+
+import Job
+import Config
+
+app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+
+# change this when pushing to production
+#app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
+
+# persistence
+mongo = PyMongo(app)
+
 
 twitter = oauth.remote_app(
     'twitter',
@@ -89,8 +104,8 @@ def get_job(job_id):
 #   get a specific job
     return job_id, 501
     
-@app.route('/jobs/<job_id>', methods=['POST'])
-def post_job(job_id):
+@app.route('/jobs', methods=['POST'])
+def post_job():
 #	to submit a job:
     
     # get request parameters (form data?)
@@ -100,7 +115,7 @@ def post_job(job_id):
     job = Job.Job()
     job.update(request.form)
     
-    return job_id, 501
+    return '', 501
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
