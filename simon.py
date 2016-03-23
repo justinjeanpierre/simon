@@ -20,6 +20,9 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+
+# change this when pushing to production
+#app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
 
 # persistence

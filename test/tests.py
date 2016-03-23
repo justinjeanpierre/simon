@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-# imports
 import unittest
 
 # imports from project
@@ -12,6 +11,7 @@ from JobTests import JobTestCase
 from ResultTests import ResultTestCase
 from SimulatorParametersTest import SimulatorParametersTestCase
 from PersistenceJobTests import JobPersistenceTestCase
+from PersistenceResultTests import ResultPersistenceTestCase
 
 def test_suite():
 	test_suite = unittest.TestSuite()
@@ -24,6 +24,7 @@ def test_suite():
 	test_suite.addTest(unittest.makeSuite(ResultTestCase))
 	test_suite.addTest(unittest.makeSuite(SimulatorParametersTestCase))
 	test_suite.addTest(unittest.makeSuite(JobPersistenceTestCase))
+	test_suite.addTest(unittest.makeSuite(ResultPersistenceTestCase))
 	
 	return test_suite
 

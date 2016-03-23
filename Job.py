@@ -38,7 +38,7 @@ class Job:
 		return mongoCollection.insert_one({'identifier':self.id, 'simulator_parameters':self.simulator_parameters})
 		
 	@classmethod
-	def find_job(_class, job_id, mongoCollection = None):
+	def find_by_id(_class, job_id, mongoCollection = None):
 		# this function returns an instance of Job 
 		# if one was found in the db with a matching job_id
 		#

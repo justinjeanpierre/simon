@@ -36,7 +36,7 @@ class JobPersistenceTestCase(unittest.TestCase):
 		
 	def test_retrieve_job(self):
 		# get a job back from the test db
-		_job = Job.Job.find_job(987654321, self.jobs)
+		_job = Job.Job.find_by_id(987654321, self.jobs)
 		
 		assert _job is not None
 		assert _job.id == 987654321
