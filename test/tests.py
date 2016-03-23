@@ -11,7 +11,7 @@ from StatisticsRouteTests import StatsRoutesTestCase
 from JobTests import JobTestCase
 from ResultTests import ResultTestCase
 from SimulatorParametersTest import SimulatorParametersTestCase
-from PersistenceTests import PersistenceTestCase
+from PersistenceJobTests import JobPersistenceTestCase
 
 def test_suite():
 	test_suite = unittest.TestSuite()
@@ -23,7 +23,7 @@ def test_suite():
 	test_suite.addTest(unittest.makeSuite(JobTestCase))
 	test_suite.addTest(unittest.makeSuite(ResultTestCase))
 	test_suite.addTest(unittest.makeSuite(SimulatorParametersTestCase))
-	test_suite.addTest(unittest.makeSuite(PersistenceTestCase))
+	test_suite.addTest(unittest.makeSuite(JobPersistenceTestCase))
 	
 	return test_suite
 

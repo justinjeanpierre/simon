@@ -11,7 +11,7 @@ import json
 import simon
 import Job
 
-class PersistenceTestCase(unittest.TestCase):
+class JobPersistenceTestCase(unittest.TestCase):
 		
 	def setUp(self):
 		# initialization stuff

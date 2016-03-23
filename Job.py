@@ -34,6 +34,7 @@ class Job:
 		pass
 
 	def save(self, mongoCollection = None):
+		# (should check db to see if this job exists first)
 		return mongoCollection.insert_one({'identifier':self.id, 'simulator_parameters':self.simulator_parameters})
 		
 	@classmethod
