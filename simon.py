@@ -1,11 +1,14 @@
 #!/usr/bin/python
 
+import Job
+import Config
 import os, json
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from Config import DevelopmentConfig
 from flask_oauthlib.client import OAuth, OAuthException
+from flask.ext.pymongo import PyMongo
 
 """ 
 --------------------------------------------
@@ -24,6 +27,13 @@ app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+
+# change this when pushing to production
+# app.config.from_object(Config.ProductionConfig)
+app.config.from_object(Config.DevelopmentConfig)
+
+# persistence
+mongo = PyMongo(app)
 
 @app.before_request
 def before_request():
@@ -145,7 +155,6 @@ def facebook_login():
     )
     return facebook.authorize(callback=callback)
 
-
 @app.route('/facebook/authorized')
 def facebook_authorized():
     resp = facebook.authorized_response()
@@ -176,11 +185,23 @@ Form functions
 def get_jobs():
 #   get a list of all jobs
 #   (...to which this authenticated user has access)
-    return 'this is a response to a GET request', 200
+    return '', 501
+   
+@app.route('/jobs/<job_id>', methods=['GET'])
+def get_job(job_id):
+#   get a specific job
+    return job_id, 501
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-#	create a job
+	# create a job
+    # to submit a job:
+    # get request parameters (form data?)
+    # create object, populate with request data
+    # save in db
+    # serialize and send to simulator
+    job = Job.Job()
+    job.update(request.form)
     user_input = request.form
     return jsonify(number_cores=user_input['cores'],
         number_processes=user_input['processes'],
@@ -190,21 +211,34 @@ def post_job():
         enable_modeling_power=''.join(user_input.getlist('modeling_power')),
         enable_modeling_area=''.join(user_input.getlist('modeling_area')))
     
-@app.route('/jobs', methods=['PUT'])
-def put_job():
+@app.route('/jobs/<job_id>', methods=['PUT'])
+def put_job(job_id):
 #   update some job's status
-    return 'this is a response to a PUT request', 200
+    return job_id, 501
     
-@app.route('/jobs', methods=['PUT'])
-def delete_job():
+@app.route('/jobs/<job_id>', methods=['DELETE'])
+def delete_job(job_id):
 #   delete a job
-    return 'this is a response to a DELETE request', 200
+    return job_id, 501
+    
+# results routes
+@app.route('/results', methods=['GET'])
+def get_results():
+#   get a list of all results
+#   (...to which this authenticated user has access)
+
+    return '', 501
+
+@app.route('/results/<result_id>', methods=['GET'])
+def get_result(result_id):
+#   get one of the user's results
+    return result_id, 501
 
 # stats routes
 @app.route('/stats', methods=['GET'])
 def get_stats():
 #   get the dashboard?
-    return 'this is a response to a GET request to /stats', 200
+    return '', 501
 
 """ 
 --------------------------------------------
@@ -230,7 +264,7 @@ def logout():
 # show the documentation
 @app.route('/docs', methods=['GET'])
 def show_docs():
-    return 'unimplemented', 501
+    return '', 501
 
 @app.route('/run', methods=['GET'])
 def run_simulation():
