@@ -228,8 +228,7 @@ def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
 
-    return '', 501
-#    return render_template('results.html')
+    return render_template('results.html')
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
