@@ -8,7 +8,6 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from Config import DevelopmentConfig
 from flask_oauthlib.client import OAuth, OAuthException
-from flask.ext.pymongo import PyMongo
 
 """ 
 --------------------------------------------
@@ -31,9 +30,6 @@ oauth = OAuth(app)
 # change this when pushing to production
 # app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
-
-# persistence
-mongo = PyMongo(app)
 
 @app.before_request
 def before_request():
