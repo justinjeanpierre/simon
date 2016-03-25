@@ -201,15 +201,16 @@ def post_job():
     # save in db
     # serialize and send to simulator
     job = Job.Job()
-    job.update(request.form)
     user_input = request.form
-    return jsonify(number_cores=user_input['cores'],
-        number_processes=user_input['processes'],
-        maximum_frequency=user_input['maximum_frequency'],
-        maximum_temperature=user_input['maximum_temperature'],
-        enable_modeling_core=''.join(user_input.getlist('modeling_core')),
-        enable_modeling_power=''.join(user_input.getlist('modeling_power')),
-        enable_modeling_area=''.join(user_input.getlist('modeling_area')))
+    job.update(user_input)
+    
+    if len(user_input.keys()) == 0:
+        # this is a request sent without
+        # simulator parameters.
+        # it should be rejected.
+        return '', 400
+    else:
+        return json.dumps(user_input), 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -228,6 +229,7 @@ def get_results():
 #   (...to which this authenticated user has access)
 
     return '', 501
+#    return render_template('results.html')
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
@@ -270,10 +272,6 @@ def show_docs():
 def run_simulation():
     return render_template('simulation.html')
 
-# results routes
-@app.route('/results', methods=['GET'])
-def get_results():
-    return render_template('results.html')
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
