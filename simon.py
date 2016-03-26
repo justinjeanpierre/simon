@@ -7,15 +7,6 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 # OAuth
 from flask_oauthlib.client import OAuth
-# Bootstrap
-from flask_bootstrap import Bootstrap
-from flask.ext.pymongo import PyMongo
-
-import Job
-import Config
-
-# Mongo and persistence
-from flask.ext.pymongo import PyMongo
 
 import Job
 import Config
@@ -28,9 +19,6 @@ oauth = OAuth(app)
 # change this when pushing to production
 #app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
-
-# persistence
-mongo = PyMongo(app)
 
 
 twitter = oauth.remote_app(
