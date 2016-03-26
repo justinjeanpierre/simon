@@ -9,6 +9,10 @@ from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
 # Bootstrap
 from flask_bootstrap import Bootstrap
+from flask.ext.pymongo import PyMongo
+
+import Job
+import Config
 
 # Mongo and persistence
 from flask.ext.pymongo import PyMongo
@@ -20,6 +24,9 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
+
+# change this when pushing to production
+#app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
 
 # persistence

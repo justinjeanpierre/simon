@@ -5,13 +5,29 @@ class Result:
 		self.id = "" # string?
 		self.owner = "" # the corresponding job for this set of results
 		self.status = "" # some type ?
-		self.job_params = {}
+		self.parameters = {}
 				
-	def create(self):
-		# triggered by response from simulator
-		# user should not be able to create a Result
-		pass
+	def save(self, mongoCollection = None):
+		# (should check db to see if this Result exists first)
+		return mongoCollection.insert_one({'identifier':self.id, 'result_parameters':self.parameters})
 		
-	def delete(self):
-		# delete from records (triggered by user)
-		pass
+	@classmethod
+	def find_by_id(_class, result_id, mongoCollection = None):
+		# this function returns an instance of Result 
+		# if one was found in the db with a matching result_id
+		#
+		# (you should pass in a Mongo collction if you have one)
+		
+		retval = Result() # empty Result to be returned later
+		
+		if mongoCollection == None:
+			# maybe handle this situation a bit better..?
+			return retval
+
+		res = mongoCollection.find_one({'identifier':result_id})
+		if res is not None:
+			retval.id = res['identifier']
+			# validate then uncomment this
+#			retval.parameters = res['result_parameters']
+		
+		return retval
