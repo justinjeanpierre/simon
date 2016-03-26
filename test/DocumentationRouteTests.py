@@ -12,7 +12,7 @@ class DocumentationRoutesTestCase(unittest.TestCase):
 	def test_get_docs(self):
 		response = self.app.get('/docs')
 
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '200 OK'
 		
 
 if __name__ == '__main__':
