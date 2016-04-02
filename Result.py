@@ -56,7 +56,7 @@ class Result:
 		if mongoCollection == None:
 			return retval
 			
-		res = mongoCollection.find_one({'user_identifier':user_id})
+		res = mongoCollection.find_one({'owner':user_id})
 		if res is not None:
 			try:
 				retval.id = res['identifier']
@@ -77,3 +77,5 @@ class Result:
 				retval.parameters = res['parameters']
 			except:
 				pass
+
+		return retval

@@ -81,12 +81,52 @@ class ResultPersistenceTestCase(unittest.TestCase):
 		assert _result.status is None
 
 class ResultPersistenceTestCaseUser(unittest.TestCase):
+	def setUp(self):
+		# set up db
+		self.client = MongoClient('mongodb://localhost:27017')
+		self.db = self.client[TestingConfig.MONGO_DBNAME]
+		self.results = self.db.results
+		
+		# put something in it
+		self.test_result = Result.Result()
+		self.test_result.id = 'test_ResultPersistenceTestCaseUser'
+		self.test_result.owner = '_test_owner_id'
+		self.test_result.status = 'test status'
+		
+		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		
+	def tearDown(self):
+		# remove test Result from test db
+		self.results.delete_many({'identifier':self.test_result.id})
+
 	def test_find_result_by_user(self):
-		assert False
+		res = Result.Result.find_by_user_id(self.test_result.owner, self.results)
+		
+		assert res.owner == self.test_result.owner
 		
 class ResultPersistenceTestCaseResult(unittest.TestCase):
+	def setUp(self):
+		# configure db and connection
+		self.client = MongoClient('mongodb://localhost:27017')
+		self.db = self.client[TestingConfig.MONGO_DBNAME]
+		self.results = self.db.results
+		
+		# store a Result in the db
+		self.test_result = Result.Result()
+		self.test_result.id = 'test_ResultPersistenceTestCaseResult'
+		self.test_result.owner = '_test_owner_id'
+		self.test_result.status = 'a status'
+		
+		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		
+	def tearDown(self):
+		# remove test Result from the test db
+		self.results.delete_many({'identifier':self.test_result.id})
+
 	def test_find_result_by_id(self):
-		assert False
+		res = Result.Result.find_by_id(self.test_result.id, self.results)
+		
+		assert res.id == self.test_result.id
 		
 		
 if __name__ == '__main__':
