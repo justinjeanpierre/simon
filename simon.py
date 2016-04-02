@@ -229,7 +229,16 @@ def get_results():
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
 #   get one of the user's results
+
     return result_id, 501
+
+@app.route('/results', methods=['POST'])
+def post_result():
+    # validate results returned from simulator,
+    # create a Result object,
+    # save it in the db.
+
+    return '', 501
 
 # stats routes
 @app.route('/stats', methods=['GET'])
