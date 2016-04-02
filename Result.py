@@ -65,6 +65,9 @@ class Result:
 		retval = Result()
 
 		res = mongoCollection.find_one({'owner':user_id}, {'_id':0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's results.
+		
 		if res is not None:
 			try:
 				retval.id = res['identifier']

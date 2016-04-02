@@ -96,7 +96,11 @@ class Job:
 		
 		retval = Job()
 	
+		
 		res = mongoCollection.find_one({'owner':user_id}, {'_id':0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's jobs.
+		
 		if res is not None:
 			# only populate the object with db fields that exist
 			try:

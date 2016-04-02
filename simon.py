@@ -196,7 +196,15 @@ Form functions
 def get_jobs():
 #   get a list of all jobs
 #   (...to which this authenticated user has access)
+
     return '', 501
+    
+    # probably something like this:
+#    user_jobs = Job.Job.find_by_user_id(g.user, jobs)
+#    if user_jobs is not None:
+#        return jsonpickle.encode(user_jobs), 200
+#    else:
+#        return '', 501
    
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
@@ -265,6 +273,13 @@ def post_result():
     # save it in the db.
 
     return '', 501
+    
+    # probably something like this:
+#    user_results = Result.Result.find_by_user_id(g.user, results)
+#    if user_results is not None:
+#        return jsonpickle.encode(user_results), 200
+#    else:
+#        return '', 501
 
 # stats routes
 @app.route('/stats', methods=['GET'])
