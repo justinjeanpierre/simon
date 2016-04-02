@@ -6,8 +6,13 @@ import os, json
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
-from Config import DevelopmentConfig
+from Config import DevelopmentConfig, TestingConfig
 from flask_oauthlib.client import OAuth, OAuthException
+import jsonpickle
+
+# persistence
+from flask.ext.pymongo import PyMongo
+from pymongo import MongoClient
 
 """ 
 --------------------------------------------
@@ -29,7 +34,15 @@ oauth = OAuth(app)
 
 # change this when pushing to production
 # app.config.from_object(Config.ProductionConfig)
-app.config.from_object(Config.DevelopmentConfig)
+# app.config.from_object(Config.DevelopmentConfig)
+app.config.from_object(Config.TestingConfig)
+
+# db startup and variables
+#mongo = PyMongo(app)
+client = MongoClient(TestingConfig.MONGO_URI)
+db = client[TestingConfig.MONGO_DBNAME]
+jobs = db.jobs
+results = db.results
 
 @app.before_request
 def before_request():
@@ -176,6 +189,8 @@ Form functions
 --------------------------------------------
 """
 
+# set up mongo here
+
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
@@ -186,7 +201,13 @@ def get_jobs():
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
 #   get a specific job
-    return job_id, 501
+
+    job = Job.Job.find_by_id(str(job_id), jobs)
+
+    if job is not None:
+        return jsonpickle.encode(job), 200
+    else:
+        return job_id, 500
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
@@ -278,5 +299,5 @@ def run_simulation():
 
 	
 if __name__ == "__main__":
-	port = int(os.environ.get("PORT", 5000))
-	app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)

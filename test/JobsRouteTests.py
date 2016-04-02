@@ -2,7 +2,14 @@
 
 import os	
 import unittest
+
+from flask import Flask
+from flask.ext.pymongo import PyMongo
+from pymongo import MongoClient
+from Config import TestingConfig
+
 import simon
+import Job
 
 class JobsRouteTestCase(unittest.TestCase):
 		
@@ -24,15 +31,30 @@ class JobsRouteTestCaseGET(unittest.TestCase):
 
 	def setUp(self):
 		self.app = simon.app.test_client()
+
+		# initialization stuff
+		# make sure mongod is running first!!!
+		self.client = MongoClient('mongodb://localhost:27017')
+		self.db = self.client[TestingConfig.MONGO_DBNAME]
+		self.jobs = self.db.jobs
 		
+		self.test_job = Job.Job()
+		self.test_job.id = str(24680)
+		self.test_job.owner = 'test_JOBS_ROUTE_TESTS_owner'
+		self.test_job.status = 'test_JOBS_ROUTE_TESTS_status'
+		
+		self.jobs.insert_one({'identifier':self.test_job.id, 'owner':self.test_job.owner, 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+			
 	def tearDown(self):
+		# remove test data from test db
+		self.jobs.delete_many({'identifier':self.test_job.id})
 		pass
 	
 	def test_get_job(self):
-		response = self.app.get('/jobs/123')
+		response = self.app.get('/jobs/24680')
 		
-		assert '123' in response.data
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert '24680' in response.data
+		assert response.status == '200 OK'
 
 	def test_get_jobs(self):
 		response = self.app.get('/jobs')
