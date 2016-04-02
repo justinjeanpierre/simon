@@ -27,6 +27,8 @@ class ResultPersistenceTestCase(unittest.TestCase):
 
 		# some available stuff
 		self.test_store_result_identifier = 8765
+		self.test_store_result_owner = 'SOME_RESULT_OWNER'
+		self.test_store_result_status = 'SOME_RESULT_STATUS'
 		
 	def tearDown(self):
 		# remove test data from test db
@@ -34,24 +36,21 @@ class ResultPersistenceTestCase(unittest.TestCase):
 		self.results.delete_many({'identifier':987654321})
 		self.results.delete_many({'identifier':self.test_store_result_identifier})
 		
-	def test_retrieve_result(self):
-		# get a result back from the test db
-		_result = Result.Result.find_by_id(987654321, self.results)
-		
-		assert _result is not None
-		assert _result.id == 987654321
-		
 	def test_store_result(self):
 		_result = Result.Result()
 		
 		# reassurance
 		assert _result is not None
-		assert _result.id == ''
-		assert _result.owner == ''
-		assert _result.status == ''
+		assert _result.id is None
+		assert _result.owner is None
+		assert _result.status is None
 		
-		# save the Result
+		# populate properties with test data
 		_result.id = self.test_store_result_identifier
+		_result.owner = self.test_store_result_owner
+		_result.status = self.test_store_result_status
+		
+		# tell the Result to save itself
 		_result.save(self.results)
 		
 		# create an "empty" Result
@@ -61,13 +60,34 @@ class ResultPersistenceTestCase(unittest.TestCase):
 		res = self.results.find_one({'identifier':_result.id}) 
 		if res is not None:
 			saved_result.id = res['identifier']
+			saved_result.owner = res['owner']
+			saved_result.status = res['status']
 			saved_result.parameters = res['result_parameters']
 		
 		# compare db data with test Result
 		assert saved_result is not None
 		assert saved_result.id == self.test_store_result_identifier
+		assert saved_result.owner == self.test_store_result_owner
+		assert saved_result.status == self.test_store_result_status
 		assert saved_result.parameters == _result.parameters
 
+	def test_retrieve_result(self): #(not a useful test, just checking)
+		# get a result back from the test db
+		_result = Result.Result.find_by_id(987654321, self.results)
 
+		assert _result is not None
+		assert _result.id == 987654321
+		assert _result.owner is None
+		assert _result.status is None
+
+class ResultPersistenceTestCaseUser(unittest.TestCase):
+	def test_find_result_by_user(self):
+		assert False
+		
+class ResultPersistenceTestCaseResult(unittest.TestCase):
+	def test_find_result_by_id(self):
+		assert False
+		
+		
 if __name__ == '__main__':
 	unittest.main()
