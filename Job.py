@@ -73,7 +73,8 @@ class Job:
 				retval.simulator_parameters = res['simulator_parameters']
 			except:
 				pass
-		
+		else:
+			pass
 		return retval
 		
 	@classmethod
@@ -106,7 +107,7 @@ class Job:
 				retval.simulator_parameters = res['simulator_parameters']
 			except:
 				pass
-			print res
+		else:
+			pass
 
-		print 'no results'
-
+		return retval

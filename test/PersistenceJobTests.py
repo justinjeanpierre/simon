@@ -81,12 +81,52 @@ class JobPersistenceTestCase(unittest.TestCase):
 		assert _job.owner is None
 		
 class JobPersistenceTestCaseUser(unittest.TestCase):
+	def setUp(self):
+		# set up the db
+		self.client = MongoClient('mongodb://localhost:27017')
+		self.db = self.client[TestingConfig.MONGO_DBNAME]
+		self.jobs = self.db.jobs
+		
+		# add a job
+		# (make sure it has a .owner)
+		self.test_job = Job.Job()
+		self.test_job.id = 'test_JobPersistenceTestCaseUser_identifier'
+		self.test_job.owner = 'test_JobPersistenceTestCaseUser_owner'
+		self.test_job.status = 'test_JobPersistenceTestCaseUser_status'
+		
+		self.jobs.insert_one({'identifier':self.test_job.id, 'owner':self.test_job.owner, 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		
+	def tearDown(self):
+		# remove the job from the db
+		self.jobs.delete_many({'identifier':self.test_job.id})
+
 	def test_find_job_by_user(self):
-		assert False
+		res = Job.Job.find_by_user_id(self.test_job.owner, self.jobs)
+		assert res.owner == self.test_job.owner
 		
 class JobPersistenceTestCaseJob(unittest.TestCase):
+	def setUp(self):
+		# set up the db
+		self.client = MongoClient('mongodb://localhost:27017')
+		self.db = self.client[TestingConfig.MONGO_DBNAME]
+		self.jobs = self.db.jobs
+		
+		# add a job
+		# (make sure it has a .identifier)
+		self.test_job = Job.Job()
+		self.test_job.id = 'test_JobPersistenceTestCaseJob_identifier'
+		self.test_job.owner = 'test_JobPersistenceTestCaseJob_owner'
+		self.test_job.status = 'test_JobPersistenceTestCaseJob_status'
+		
+		self.jobs.insert_one({'identifier':self.test_job.id, 'owner':self.test_job.owner, 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		
+	def tearDown(self):
+		# remove the job from the db
+		self.jobs.delete_many({'identifier':self.test_job.id})
+
 	def test_find_job_by_id(self):
-		assert False
+		res = Job.Job.find_by_id(self.test_job.id, self.jobs)
+		assert res.id == self.test_job.id
 		
 
 if __name__ == '__main__':
