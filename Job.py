@@ -44,12 +44,15 @@ class Job:
 		#
 		# (you should pass in a Mongo collction if you have one)
 		
-		retval = Job() # empty Job to be returned later
+		if job_id == None:
+			return None
 		
 		if mongoCollection == None:
 			# maybe handle this situation a bit better..?
-			return retval
+			return None
 
+		retval = Job() # empty Job to be returned later
+		
 		res = mongoCollection.find_one({'identifier':job_id})
 		if res is not None:
 			try:
@@ -79,12 +82,17 @@ class Job:
 		
 	@classmethod
 	def find_by_user_id(_class, user_id, mongoCollection = None):
-		
-		retval = Job()
+		# this is intended to return all Jobs that belong
+		# to a specific (i.e.: currently logged-in) user
+				
+		if user_id == None:
+			return None
 		
 		if mongoCollection == None:
-			return retval
-			
+			return None
+		
+		retval = Job()
+	
 		res = mongoCollection.find_one({'owner':user_id})
 		if res is not None:
 			# only populate the object with db fields that exist
