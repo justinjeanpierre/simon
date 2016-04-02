@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import Job
+import Result
 import Config
 import os, json
 from flask import Flask, jsonify
@@ -38,7 +39,6 @@ oauth = OAuth(app)
 app.config.from_object(Config.TestingConfig)
 
 # db startup and variables
-#mongo = PyMongo(app)
 client = MongoClient(TestingConfig.MONGO_URI)
 db = client[TestingConfig.MONGO_DBNAME]
 jobs = db.jobs
@@ -251,7 +251,12 @@ def get_results():
 def get_result(result_id):
 #   get one of the user's results
 
-    return result_id, 501
+    result = Result.Result.find_by_id(str(result_id), results)
+
+    if result is not None:
+        return jsonpickle.encode(result), 200
+    else:
+        return result_id, 500
 
 @app.route('/results', methods=['POST'])
 def post_result():
