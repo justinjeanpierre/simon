@@ -27,7 +27,7 @@ class Result:
 
 		retval = Result() # empty Result to be returned later
 
-		res = mongoCollection.find_one({'identifier':result_id})
+		res = mongoCollection.find_one({'identifier':result_id}, {'_id':0})
 		if res is not None:
 			try:
 				retval.id = res['identifier']
@@ -64,7 +64,10 @@ class Result:
 			
 		retval = Result()
 
-		res = mongoCollection.find_one({'owner':user_id})
+		res = mongoCollection.find_one({'owner':user_id}, {'_id':0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's results.
+		
 		if res is not None:
 			try:
 				retval.id = res['identifier']
