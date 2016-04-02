@@ -102,7 +102,18 @@ class JobPersistenceTestCaseUser(unittest.TestCase):
 
 	def test_find_job_by_user(self):
 		res = Job.Job.find_by_user_id(self.test_job.owner, self.jobs)
+		
 		assert res.owner == self.test_job.owner
+		
+	def test_find_job_by_user_missing_user_id(self):
+		res = Job.Job.find_by_user_id(None, self.jobs)
+		
+		assert res == None
+		
+	def test_find_job_by_user_missing_collection(self):
+		res = Job.Job.find_by_user_id(self.test_job.owner, None)
+		
+		assert res == None
 		
 class JobPersistenceTestCaseJob(unittest.TestCase):
 	def setUp(self):
@@ -126,8 +137,19 @@ class JobPersistenceTestCaseJob(unittest.TestCase):
 
 	def test_find_job_by_id(self):
 		res = Job.Job.find_by_id(self.test_job.id, self.jobs)
+		
 		assert res.id == self.test_job.id
 		
+	def test_find_job_by_user_missing_id(self):
+		res = Job.Job.find_by_id(None, self.jobs)
+		
+		assert res == None
+
+	def test_find_job_by_user_missing_collection(self):
+		res = Job.Job.find_by_id(self.test_job.owner, None)
+		
+		assert res == None
+
 
 if __name__ == '__main__':
 	unittest.main()

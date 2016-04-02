@@ -19,11 +19,13 @@ class Result:
 		#
 		# (you should pass in a Mongo collection if you have one)
 		
-		retval = Result() # empty Result to be returned later
-		
+		if result_id == None:
+			return None
+				
 		if mongoCollection == None:
-			# maybe handle this situation a bit better..?
-			return retval
+			return None
+
+		retval = Result() # empty Result to be returned later
 
 		res = mongoCollection.find_one({'identifier':result_id})
 		if res is not None:
@@ -51,11 +53,17 @@ class Result:
 
 	@classmethod
 	def find_by_user_id(_class, user_id, mongoCollection = None):
-		retval = Result()
+		# this is intended to return all Results that belong
+		# to a specific (i.e.: currently logged-in) user
+		
+		if user_id == None:
+			return None
 		
 		if mongoCollection == None:
-			return retval
+			return None
 			
+		retval = Result()
+
 		res = mongoCollection.find_one({'owner':user_id})
 		if res is not None:
 			try:

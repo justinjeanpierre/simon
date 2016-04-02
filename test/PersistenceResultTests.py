@@ -104,6 +104,16 @@ class ResultPersistenceTestCaseUser(unittest.TestCase):
 		
 		assert res.owner == self.test_result.owner
 		
+	def test_find_job_by_user_missing_user_id(self):
+		res = Result.Result.find_by_user_id(None, self.results)
+
+		assert res == None
+
+	def test_find_job_by_user_missing_collection(self):
+		res = Result.Result.find_by_user_id(self.results, None)
+
+		assert res == None
+
 class ResultPersistenceTestCaseResult(unittest.TestCase):
 	def setUp(self):
 		# configure db and connection
@@ -128,6 +138,15 @@ class ResultPersistenceTestCaseResult(unittest.TestCase):
 		
 		assert res.id == self.test_result.id
 		
-		
+	def test_find_job_by_id_missing_user_id(self):
+		res = Result.Result.find_by_id(None, self.results)
+
+		assert res == None
+
+	def test_find_job_by_id_missing_collection(self):
+		res = Result.Result.find_by_id(self.results, None)
+
+		assert res == None
+
 if __name__ == '__main__':
 	unittest.main()
