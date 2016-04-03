@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import Job
+# import Job
 import Config
 import os, json
 from flask import Flask, jsonify
@@ -8,6 +8,10 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from Config import DevelopmentConfig
 from flask_oauthlib.client import OAuth, OAuthException
+<<<<<<< HEAD
+=======
+#from flask.ext.pymongo import PyMongo
+>>>>>>> Applied changes
 
 """ 
 --------------------------------------------
@@ -31,6 +35,12 @@ oauth = OAuth(app)
 # app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
 
+<<<<<<< HEAD
+=======
+# persistence
+# mongo = PyMongo(app)
+
+>>>>>>> Applied changes
 @app.before_request
 def before_request():
     g.user = None
@@ -38,8 +48,8 @@ def before_request():
         g.user = session['twitter_oauth']
     elif 'google_token' in session:
         g.user = session['google_token']
-    elif 'oauth_token' in session:
-        g.user = session['oauth_token']
+    elif 'facebook_token' in session:
+        g.user = session['facebook_token']
 
 """ 
 --------------------------------------------
@@ -162,13 +172,13 @@ def facebook_authorized():
     if isinstance(resp, OAuthException):
         return 'Access denied: %s' % resp.message
 
-    session['oauth_token'] = (resp['access_token'], '')
+    session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
     return redirect(url_for('index'))
 
 @facebook.tokengetter
 def get_facebook_oauth_token():
-    return session.get('oauth_token')
+    return session.get('facebook_token')
 
 """ 
 --------------------------------------------
@@ -196,6 +206,7 @@ def post_job():
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
+<<<<<<< HEAD
     job = Job.Job()
     user_input = request.form
     job.update(user_input)
@@ -207,6 +218,18 @@ def post_job():
         return '', 400
     else:
         return json.dumps(user_input), 200
+=======
+    # job = Job.Job()
+    # job.update(request.form)
+    user_input = request.form
+    return jsonify(GENERAL_TOTAL_CORES=user_input['GENERAL_TOTAL_CORES'],
+        GENERAL_NUM_PROCESSES=user_input['GENERAL_NUM_PROCESSES'],
+        GENERAL_MAX_FREQUENCY=user_input['GENERAL_MAX_FREQUENCY'],
+        GENERAL_TEMPERATURE=user_input['GENERAL_TEMPERATURE'],
+        GENERAL_ENABLE_MODELING_CORE=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_CORE')),
+        GENERAL_ENABLE_MODELING_POWER=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_POWER')),
+        GENERAL_ENABLE_MODELING_AREA=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_AREA')))
+>>>>>>> Applied changes
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -255,7 +278,7 @@ def login():
 def logout():
     session.pop('google_token', None)
     session.pop('twitter_oauth', None)
-    session.pop('oauth_token', None)
+    session.pop('facebook_token', None)
     return redirect(url_for('index'))
 
 # show the documentation
@@ -266,7 +289,10 @@ def show_docs():
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
+<<<<<<< HEAD
 
+=======
+>>>>>>> Applied changes
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))

@@ -60,7 +60,10 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+<<<<<<< HEAD
 
 #files
 temp_config.py
 Config.py
+=======
+>>>>>>> Applied changes
