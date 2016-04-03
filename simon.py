@@ -8,10 +8,7 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from Config import DevelopmentConfig
 from flask_oauthlib.client import OAuth, OAuthException
-<<<<<<< HEAD
-=======
 #from flask.ext.pymongo import PyMongo
->>>>>>> Applied changes
 
 """ 
 --------------------------------------------
@@ -35,12 +32,9 @@ oauth = OAuth(app)
 # app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
 
-<<<<<<< HEAD
-=======
+
 # persistence
 # mongo = PyMongo(app)
-
->>>>>>> Applied changes
 @app.before_request
 def before_request():
     g.user = None
@@ -85,6 +79,7 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
+    user_id = resp['user_id']
     return redirect(url_for('index'))
 
 """ 
@@ -206,10 +201,9 @@ def post_job():
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
-<<<<<<< HEAD
-    job = Job.Job()
+    #job = Job.Job()
     user_input = request.form
-    job.update(user_input)
+    #job.update(user_input)
     
     if len(user_input.keys()) == 0:
         # this is a request sent without
@@ -218,18 +212,6 @@ def post_job():
         return '', 400
     else:
         return json.dumps(user_input), 200
-=======
-    # job = Job.Job()
-    # job.update(request.form)
-    user_input = request.form
-    return jsonify(GENERAL_TOTAL_CORES=user_input['GENERAL_TOTAL_CORES'],
-        GENERAL_NUM_PROCESSES=user_input['GENERAL_NUM_PROCESSES'],
-        GENERAL_MAX_FREQUENCY=user_input['GENERAL_MAX_FREQUENCY'],
-        GENERAL_TEMPERATURE=user_input['GENERAL_TEMPERATURE'],
-        GENERAL_ENABLE_MODELING_CORE=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_CORE')),
-        GENERAL_ENABLE_MODELING_POWER=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_POWER')),
-        GENERAL_ENABLE_MODELING_AREA=''.join(user_input.getlist('GENERAL_ENABLE_MODELING_AREA')))
->>>>>>> Applied changes
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -289,10 +271,6 @@ def show_docs():
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
-<<<<<<< HEAD
-
-=======
->>>>>>> Applied changes
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
