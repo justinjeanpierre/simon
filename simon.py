@@ -2,13 +2,20 @@
 
 # import Job
 import Config
+import Job
+import Result
+
 import os, json
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
-from Config import DevelopmentConfig
+from Config import DevelopmentConfig, TestingConfig
 from flask_oauthlib.client import OAuth, OAuthException
-#from flask.ext.pymongo import PyMongo
+import jsonpickle
+
+# persistence
+from flask.ext.pymongo import PyMongo
+from pymongo import MongoClient
 
 """ 
 --------------------------------------------
@@ -30,7 +37,14 @@ oauth = OAuth(app)
 
 # change this when pushing to production
 # app.config.from_object(Config.ProductionConfig)
-app.config.from_object(Config.DevelopmentConfig)
+# app.config.from_object(Config.DevelopmentConfig)
+app.config.from_object(Config.TestingConfig)
+
+# db startup and variables
+client = MongoClient(TestingConfig.MONGO_URI)
+db = client[TestingConfig.MONGO_DBNAME]
+jobs = db.jobs
+results = db.results
 
 
 # persistence
@@ -181,17 +195,33 @@ Form functions
 --------------------------------------------
 """
 
+# set up mongo here
+
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
 #   get a list of all jobs
 #   (...to which this authenticated user has access)
+
     return '', 501
+    
+    # probably something like this:
+#    user_jobs = Job.Job.find_by_user_id(g.user, jobs)
+#    if user_jobs is not None:
+#        return jsonpickle.encode(user_jobs), 200
+#    else:
+#        return '', 501
    
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
 #   get a specific job
-    return job_id, 501
+
+    job = Job.Job.find_by_id(str(job_id), jobs)
+
+    if job is not None:
+        return jsonpickle.encode(job), 200
+    else:
+        return job_id, 500
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
@@ -234,7 +264,28 @@ def get_results():
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
 #   get one of the user's results
-    return result_id, 501
+
+    result = Result.Result.find_by_id(str(result_id), results)
+
+    if result is not None:
+        return jsonpickle.encode(result), 200
+    else:
+        return result_id, 500
+
+@app.route('/results', methods=['POST'])
+def post_result():
+    # validate results returned from simulator,
+    # create a Result object,
+    # save it in the db.
+
+    return '', 501
+    
+    # probably something like this:
+#    user_results = Result.Result.find_by_user_id(g.user, results)
+#    if user_results is not None:
+#        return jsonpickle.encode(user_results), 200
+#    else:
+#        return '', 501
 
 # stats routes
 @app.route('/stats', methods=['GET'])
@@ -273,5 +324,5 @@ def run_simulation():
     return render_template('simulation.html')
 	
 if __name__ == "__main__":
-	port = int(os.environ.get("PORT", 5000))
-	app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
