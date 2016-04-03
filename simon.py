@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
+# import Job
+import Config
 import Job
 import Result
-import Config
+
 import os, json
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
@@ -44,6 +46,9 @@ db = client[TestingConfig.MONGO_DBNAME]
 jobs = db.jobs
 results = db.results
 
+
+# persistence
+# mongo = PyMongo(app)
 @app.before_request
 def before_request():
     g.user = None
@@ -51,8 +56,8 @@ def before_request():
         g.user = session['twitter_oauth']
     elif 'google_token' in session:
         g.user = session['google_token']
-    elif 'oauth_token' in session:
-        g.user = session['oauth_token']
+    elif 'facebook_token' in session:
+        g.user = session['facebook_token']
 
 """ 
 --------------------------------------------
@@ -88,6 +93,7 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
+    user_id = resp['user_id']
     return redirect(url_for('index'))
 
 """ 
@@ -175,13 +181,13 @@ def facebook_authorized():
     if isinstance(resp, OAuthException):
         return 'Access denied: %s' % resp.message
 
-    session['oauth_token'] = (resp['access_token'], '')
+    session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
     return redirect(url_for('index'))
 
 @facebook.tokengetter
 def get_facebook_oauth_token():
-    return session.get('oauth_token')
+    return session.get('facebook_token')
 
 """ 
 --------------------------------------------
@@ -225,9 +231,9 @@ def post_job():
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
-    job = Job.Job()
+    #job = Job.Job()
     user_input = request.form
-    job.update(user_input)
+    #job.update(user_input)
     
     if len(user_input.keys()) == 0:
         # this is a request sent without
@@ -305,7 +311,7 @@ def login():
 def logout():
     session.pop('google_token', None)
     session.pop('twitter_oauth', None)
-    session.pop('oauth_token', None)
+    session.pop('facebook_token', None)
     return redirect(url_for('index'))
 
 # show the documentation
@@ -316,7 +322,6 @@ def show_docs():
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
-
 	
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
