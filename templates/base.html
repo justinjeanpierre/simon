@@ -21,8 +21,8 @@
                     <ul class="nav navbar-nav">
                         <li class="{% block nav_docs %}{% endblock %}"><a href="{{ url_for('show_docs') }}">Documentation</a></li>
                         <li class="{% block nav_developers %}{% endblock %}"><a href="">Developers</a></li>
-                        <li class="{% block nav_sim %}{% endblock %}"><a href="">Run Simulation</a></li>
-                        <li class="{% block nav_results %}{% endblock %}"><a href="">Results</a></li>
+                        <li class="{% block nav_sim %}{% endblock %}"><a href="{{ url_for('run_simulation') }}">Run Simulation</a></li>
+                        <li class="{% block nav_results %}{% endblock %}"><a href="{{ url_for('get_results') }}">Results</a></li>
                         <li class="{% block nav_faq %}{% endblock %}"><a href="">FAQ</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

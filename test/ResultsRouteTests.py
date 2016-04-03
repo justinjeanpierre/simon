@@ -12,7 +12,7 @@ class ResultsRoutesTestCase(unittest.TestCase):
 	def test_get_results(self):
 		response = self.app.get('/results')
 		
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '200 OK'
 		
 	def test_get_result(self):
 		response = self.app.get('/results/987')
