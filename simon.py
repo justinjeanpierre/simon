@@ -1,42 +1,60 @@
 #!/usr/bin/python
 
-import os
-from flask import Flask
-# static files
+# import Job
+import Config
+import os, json
+from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
-# OAuth
-from flask_oauthlib.client import OAuth
-# Bootstrap
-from flask_bootstrap import Bootstrap
-from flask.ext.pymongo import PyMongo
+from Config import DevelopmentConfig
+from flask_oauthlib.client import OAuth, OAuthException
+#from flask.ext.pymongo import PyMongo
 
-import Job
-import Config
+""" 
+--------------------------------------------
+App Initialization
+--------------------------------------------
+"""
 
-# Mongo and persistence
-from flask.ext.pymongo import PyMongo
+# Current project folder
+current_dir = os.getcwd()
+# Path to templates folder
+template_dir = os.path.join(current_dir, 'templates')
+# Path to static folder
+static_dir = os.path.join(current_dir, 'static')
 
-import Job
-import Config
-
-app = Flask(__name__)
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 
 # change this when pushing to production
-#app.config.from_object(Config.ProductionConfig)
+# app.config.from_object(Config.ProductionConfig)
 app.config.from_object(Config.DevelopmentConfig)
 
-# persistence
-mongo = PyMongo(app)
 
+# persistence
+# mongo = PyMongo(app)
+@app.before_request
+def before_request():
+    g.user = None
+    if 'twitter_oauth' in session:
+        g.user = session['twitter_oauth']
+    elif 'google_token' in session:
+        g.user = session['google_token']
+    elif 'facebook_token' in session:
+        g.user = session['facebook_token']
+
+""" 
+--------------------------------------------
+Twitter Login 
+--------------------------------------------
+"""
 
 twitter = oauth.remote_app(
     'twitter',
-    consumer_key='xBeXxg9lyElUgwZT6AZ0A',
-    consumer_secret='aawnSpNTOVuDCjx7HMh6uSXetjNN8zWLpZwCEU4LBrk',
+    consumer_key=DevelopmentConfig.TWITTER_KEY,
+    consumer_secret=DevelopmentConfig.TWITTER_SECRET,
     base_url='https://api.twitter.com/1.1/',
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
@@ -49,39 +67,10 @@ def get_twitter_token():
         resp = session['twitter_oauth']
         return resp['oauth_token'], resp['oauth_token_secret']
 
-
-@app.before_request
-def before_request():
-    g.user = None
-    if 'twitter_oauth' in session:
-        g.user = session['twitter_oauth']
-
-
-@app.route('/')
-def index():
-    tweets = None
-    if g.user is not None:
-        resp = twitter.request('statuses/home_timeline.json')
-        if resp.status == 200:
-            tweets = resp.data
-        else:
-            flash('Unable to load tweets from Twitter.')
-    return render_template('index.html', tweets=tweets)
-
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    return render_template('login.html')
-
 @app.route('/twitter/')
 def twitter_login():
     callback_url = url_for('oauthorized', next=request.args.get('next'))
     return twitter.authorize(callback=callback_url or request.referrer or None)
-
-@app.route('/logout')
-def logout():
-    session.pop('twitter_oauth', None)
-    return redirect(url_for('index'))
-
 
 @app.route('/oauthorized')
 def oauthorized():
@@ -90,7 +79,107 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
+    user_id = resp['user_id']
     return redirect(url_for('index'))
+
+""" 
+--------------------------------------------
+Google Login
+--------------------------------------------
+"""
+
+app.config['GOOGLE_ID'] = DevelopmentConfig.GOOGLE_KEY
+app.config['GOOGLE_SECRET'] = DevelopmentConfig.GOOGLE_SECRET
+
+google = oauth.remote_app(
+    'google',
+    consumer_key=app.config.get('GOOGLE_ID'),
+    consumer_secret=app.config.get('GOOGLE_SECRET'),
+    request_token_params={
+        'scope': 'email'
+    },
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
+
+@app.route('/google')
+def google_login():
+    return google.authorize(callback=url_for('authorized', _external=True))
+
+@app.route('/google/authorized')
+def authorized():
+    resp = google.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['google_token'] = (resp['access_token'], '')
+    me = google.get('userinfo')
+    return redirect(url_for('index'))
+
+
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')
+
+""" 
+--------------------------------------------
+Facebook Login
+--------------------------------------------
+"""
+
+FACEBOOK_APP_ID = DevelopmentConfig.FACEBOOK_KEY
+FACEBOOK_APP_SECRET = DevelopmentConfig.FACEBOOK_SECRET
+
+facebook = oauth.remote_app(
+    'facebook',
+    consumer_key=FACEBOOK_APP_ID,
+    consumer_secret=FACEBOOK_APP_SECRET,
+    request_token_params={'scope': 'email'},
+    base_url='https://graph.facebook.com',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    access_token_method='GET',
+    authorize_url='https://www.facebook.com/dialog/oauth'
+)
+
+@app.route('/facebook')
+def facebook_login():
+    callback = url_for(
+        'facebook_authorized',
+        next=request.args.get('next') or request.referrer or None,
+        _external=True
+    )
+    return facebook.authorize(callback=callback)
+
+@app.route('/facebook/authorized')
+def facebook_authorized():
+    resp = facebook.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    if isinstance(resp, OAuthException):
+        return 'Access denied: %s' % resp.message
+
+    session['facebook_token'] = (resp['access_token'], '')
+    me = facebook.get('/me')
+    return redirect(url_for('index'))
+
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('facebook_token')
+
+""" 
+--------------------------------------------
+Form functions
+--------------------------------------------
+"""
 
 # jobs routes
 @app.route('/jobs', methods=['GET'])
@@ -106,16 +195,23 @@ def get_job(job_id):
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-#	to submit a job:
-    
+	# create a job
+    # to submit a job:
     # get request parameters (form data?)
     # create object, populate with request data
     # save in db
     # serialize and send to simulator
-    job = Job.Job()
-    job.update(request.form)
+    #job = Job.Job()
+    user_input = request.form
+    #job.update(user_input)
     
-    return '', 501
+    if len(user_input.keys()) == 0:
+        # this is a request sent without
+        # simulator parameters.
+        # it should be rejected.
+        return '', 400
+    else:
+        return json.dumps(user_input), 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -133,12 +229,11 @@ def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
 
-    return '', 501
+    return render_template('results.html')
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
 #   get one of the user's results
-
     return result_id, 501
 
 # stats routes
@@ -147,11 +242,35 @@ def get_stats():
 #   get the dashboard?
     return '', 501
 
+""" 
+--------------------------------------------
+Main website routes
+--------------------------------------------
+"""
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('google_token', None)
+    session.pop('twitter_oauth', None)
+    session.pop('facebook_token', None)
+    return redirect(url_for('index'))
+
 # show the documentation
 @app.route('/docs', methods=['GET'])
 def show_docs():
     return '', 501
 
+@app.route('/run', methods=['GET'])
+def run_simulation():
+    return render_template('simulation.html')
 	
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))

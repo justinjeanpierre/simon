@@ -20,15 +20,17 @@ class JobsRouteTestCase(unittest.TestCase):
 		assert '123' in response.data
 		assert response.status == '501 NOT IMPLEMENTED'
 
-	def test_post_job(self):
+	def test_post_job_no_data(self):
 		response = self.app.post('/jobs')
 		
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '400 BAD REQUEST'
 
-#	def test_post_job_with_params(self):
-#		response = self.app.post('/jobs/234')
-#		
-#		assert response.status == '501 NOT IMPLEMENTED'
+	def test_post_job_with_params(self):
+		d = dict(maximum_frequency=1000)
+		response = self.app.post('/jobs', data=d)
+		
+		assert '\"maximum_frequency\": \"1000\"' in response.data
+		assert response.status == '200 OK'
 
 	def test_put_job(self):
 		response = self.app.put('/jobs/345')
