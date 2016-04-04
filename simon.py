@@ -2,7 +2,7 @@
 
 # import Job
 import Config
-import os, json
+import os, json, ast
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
@@ -82,6 +82,7 @@ def oauthorized():
     else:
         session['twitter_oauth'] = resp
     user_id = resp['user_id']
+    print user_id
     return redirect(url_for('index'))
 
 """ 
@@ -121,8 +122,9 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
+    user_id = json.loads(getattr(me, 'raw_data'))['id']
+    print user_id
     return redirect(url_for('index'))
-
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -171,6 +173,8 @@ def facebook_authorized():
 
     session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+    user_id = json.loads(getattr(me, 'raw_data'))['id']
+    print user_id
     return redirect(url_for('index'))
 
 @facebook.tokengetter
