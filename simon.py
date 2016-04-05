@@ -274,6 +274,14 @@ def logout():
 def show_docs():
     return render_template('docs.html')
 
+@app.route('/developers', methods=['GET'])
+def show_dev():
+    return render_template('dev.html')
+
+@app.route('/faq', methods=['GET'])
+def show_faq():
+    return render_template('faq.html')
+
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
