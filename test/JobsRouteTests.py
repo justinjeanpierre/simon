@@ -39,27 +39,35 @@ class JobsRouteTestCaseGET(unittest.TestCase):
 		self.jobs = self.db.jobs
 		
 		self.test_job = Job.Job()
-		self.test_job.id = str(24680)
 		self.test_job.owner = 'test_JOBS_ROUTE_TESTS_owner'
 		self.test_job.status = 'test_JOBS_ROUTE_TESTS_status'
-		
-		self.jobs.insert_one({'identifier':self.test_job.id, 'owner':self.test_job.owner, 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+
+		# create some test data
+		self.jobs.insert_one({'identifier':str(1001), 'owner':'test_JOBS_ROUTE_TESTS_owner', 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1002), 'owner':str(115122217971165854689), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1003), 'owner':str(115122217971165854689), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1004), 'owner':str(115122217971165854689), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1005), 'owner':str(2593451828), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1006), 'owner':str(2593451828), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1007), 'owner':str(2593451828), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
+		self.jobs.insert_one({'identifier':str(1008), 'owner':str(2593451828), 'status':self.test_job.status, 'simulator_parameters':self.test_job.simulator_parameters})
 			
 	def tearDown(self):
 		# remove test data from test db
-		self.jobs.delete_many({'identifier':self.test_job.id})
-		pass
+		self.jobs.delete_many({'owner':'test_JOBS_ROUTE_TESTS_owner'})
+		self.jobs.delete_many({'owner':str(115122217971165854689)})
+		self.jobs.delete_many({'owner':str(2593451828)})
 	
 	def test_get_job(self):
-		response = self.app.get('/jobs/24680')
+		response = self.app.get('/jobs/1001')
 		
-		assert '24680' in response.data
-		assert response.status == '200 OK'
+#		assert '1001' in response.data
+		assert response.status == '401 UNAUTHORIZED'
 
 	def test_get_jobs(self):
 		response = self.app.get('/jobs')
 		
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '401 UNAUTHORIZED'
 
 
 class JobsRouteTestCasePOST(unittest.TestCase):
