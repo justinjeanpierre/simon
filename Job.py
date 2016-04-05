@@ -26,7 +26,7 @@ class Job:
 		
 	def submit(self):
 		# save user input
-		# send to simulator
+		# send to simulator (104.200.30.65)
 		pass
 		
 	def cancel(self):
@@ -61,29 +61,30 @@ class Job:
 		# passed in as the owner, or else everyone's jobs will be returned
 		res = mongoCollection.find_one({'identifier':job_id, 'owner':user_id}, {'_id':0}) # we don't need the object's _id
 		if res is not None:
-			tmpJob = Job()
+			tempJob = Job()
+			
 			try:
-				tmpJob.id = res['identifier']
+				tempJob.id = res['identifier']
 			except:
 				# maybe do something with the error?
 				pass
 						
 			# try to load the other fields of db response into object:
 			try:
-				tmpJob.owner = res['owner']
+				tempJob.owner = res['owner']
 			except KeyError:
 				pass
 
 			try:
-				tmpJob.status = res['status']
+				tempJob.status = res['status']
 			except:
 				pass
 
 			try:
-				tmpJob.simulator_parameters = res['simulator_parameters']
+				tempJob.simulator_parameters = res['simulator_parameters']
 			except:
 				pass
-			retval = tmpJob
+			retval = tempJob
 		else:
 			pass
 		

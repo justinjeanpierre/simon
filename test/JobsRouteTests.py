@@ -61,7 +61,6 @@ class JobsRouteTestCaseGET(unittest.TestCase):
 	def test_get_job(self):
 		response = self.app.get('/jobs/1001')
 		
-#		assert '1001' in response.data
 		assert response.status == '401 UNAUTHORIZED'
 
 	def test_get_jobs(self):

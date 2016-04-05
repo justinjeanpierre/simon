@@ -265,19 +265,39 @@ def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
 
+    if g.user is not None:
+        user_results = Result.Result.find_by_user_id(g.user, results)
+        
+        if user_results is not None:
+            return jsonpickle.encode(user_results), 200
+        else:
+            return '', 501
+    else:
+        return '', 401
+
+
     return render_template('results.html')
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
 #   get one of the user's results
 
-    result = Result.Result.find_by_id(str(result_id), results)
+#    result = Result.Result.find_by_id(str(result_id), results)
+#
+#    if result is not None:
+#        return jsonpickle.encode(result), 200
+#    else:
+#        return result_id, 500
+    result =  Result.Result.find_by_id(str(result_id), g.user, jobs)
+
+    if g.user is None:
+        return '', 401
 
     if result is not None:
         return jsonpickle.encode(result), 200
     else:
-        return result_id, 500
-
+        return 'Invalid simulation id: ' + str(result_id), 404
+    
 @app.route('/results', methods=['POST'])
 def post_result():
     # validate results returned from simulator,
