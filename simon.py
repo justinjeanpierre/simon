@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 import Job
+import Result
 import Config
-import os, json
+import os, json, ast
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
@@ -81,7 +82,8 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
-    user_id = resp['user_id']
+        g.user = resp['user_id']
+        
     return redirect(url_for('index'))
 
 """ 
@@ -121,8 +123,9 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+    
     return redirect(url_for('index'))
-
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -171,6 +174,8 @@ def facebook_authorized():
 
     session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+
     return redirect(url_for('index'))
 
 @facebook.tokengetter

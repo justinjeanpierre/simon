@@ -2,6 +2,7 @@
 
 import SimulatorParameters
 from flask.ext.pymongo import PyMongo
+from flask import g
 
 class Job:
 	def __init__(self):
