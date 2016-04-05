@@ -20,18 +20,16 @@ class JobPersistenceTestCase(unittest.TestCase):
 		self.jobs = self.db.jobs
 		
 		self.test_job = Job.Job()
-		test_job = {'identifier':'test_job_identifier'}
-		test_job = {'identifier':987654321}
-		self.jobs.insert_one(test_job)
 
 		# some available stuff
-		self.test_store_job_identifier = 8765
+		self.test_store_job_identifier = 987654321
 		self.test_store_job_owner = 'some_user_id'
 		self.test_store_job_status = 'SOME_JOB_STATUS'		
 		
+		self.jobs.insert_one({'identifier':self.test_store_job_identifier, 'owner':self.test_store_job_owner, 'status':self.test_store_job_status})
+		
 	def tearDown(self):
 		# remove test data from test db
-		self.jobs.delete_many({'identifier':'test_job_identifier'})
 		self.jobs.delete_many({'identifier':987654321})
 		self.jobs.delete_many({'identifier':self.test_store_job_identifier})
 		
@@ -59,10 +57,22 @@ class JobPersistenceTestCase(unittest.TestCase):
 		# populate the empty job with db data
 		res = self.jobs.find_one({'identifier':_job.id}) 
 		if res is not None:
-			saved_job.id = res['identifier']
-			saved_job.owner = res['owner']
-			saved_job.status = res['status']
-			saved_job.simulator_parameters = res['simulator_parameters']
+			try:
+				saved_job.id = res['identifier']
+			except:
+				pass
+			try:
+				saved_job.owner = res['owner']
+			except:
+				pass
+			try:
+				saved_job.status = res['status']
+			except:
+				pass
+			try:
+				saved_job.simulator_parameters = res['simulator_parameters']
+			except:
+				pass
 		
 		# compare db data with test job data
 		assert saved_job is not None
@@ -73,11 +83,11 @@ class JobPersistenceTestCase(unittest.TestCase):
 		
 	def test_retrieve_job(self): #(not a useful test, just checking)
 		# get a job back from the test db
-		_job = Job.Job.find_by_id(987654321, self.jobs)
+		_job = Job.Job.find_by_id(self.test_store_job_identifier, self.test_store_job_owner, self.jobs)
 		
 		assert _job is not None
-		assert _job.id == 987654321
-		assert _job.owner is None
+		assert _job.id == self.test_store_job_identifier
+		assert _job.owner == self.test_store_job_owner
 		
 class JobPersistenceTestCaseUser(unittest.TestCase):
 	def setUp(self):
@@ -102,7 +112,7 @@ class JobPersistenceTestCaseUser(unittest.TestCase):
 	def test_find_job_by_user(self):
 		res = Job.Job.find_by_user_id(self.test_job.owner, self.jobs)
 		
-		assert res.owner == self.test_job.owner
+		assert res[0].owner == self.test_job.owner
 		
 	def test_find_job_by_user_missing_user_id(self):
 		res = Job.Job.find_by_user_id(None, self.jobs)
@@ -135,7 +145,7 @@ class JobPersistenceTestCaseJob(unittest.TestCase):
 		self.jobs.delete_many({'identifier':self.test_job.id})
 
 	def test_find_job_by_id(self):
-		res = Job.Job.find_by_id(self.test_job.id, self.jobs)
+		res = Job.Job.find_by_id(self.test_job.id, self.test_job.owner, self.jobs)
 		
 		assert res.id == self.test_job.id
 		
