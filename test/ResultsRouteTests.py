@@ -44,6 +44,7 @@ class ResultsRoutesTestCaseGET(unittest.TestCase):
 	def tearDown(self):
 		# remove test data from test db
 		self.results.delete_many({'identifier':self.test_result.id})
+		self.results.delete_many({'owner':'test_RESULTS_ROUTE_TESTS_owner'})
 		self.results.delete_many({'owner':str(115122217971165854689)})
 		self.results.delete_many({'owner':str(2593451828)})
 
