@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-# import Job
+import Job
+import Result
 import Config
 import os, json, ast
 from flask import Flask, jsonify
@@ -81,8 +82,8 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
-    user_id = resp['user_id']
-    print user_id
+        g.user = resp['user_id']
+        
     return redirect(url_for('index'))
 
 """ 
@@ -122,8 +123,8 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    user_id = json.loads(getattr(me, 'raw_data'))['id']
-    print user_id
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+    
     return redirect(url_for('index'))
 
 @google.tokengetter
@@ -173,8 +174,8 @@ def facebook_authorized():
 
     session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
-    user_id = json.loads(getattr(me, 'raw_data'))['id']
-    print user_id
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+
     return redirect(url_for('index'))
 
 @facebook.tokengetter
@@ -192,6 +193,8 @@ Form functions
 def get_jobs():
 #   get a list of all jobs
 #   (...to which this authenticated user has access)
+    someJob = Job.Job()
+    
     return '', 501
    
 @app.route('/jobs/<job_id>', methods=['GET'])
