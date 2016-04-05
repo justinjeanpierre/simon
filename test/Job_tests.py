@@ -31,15 +31,7 @@ class JobTestCase(unittest.TestCase):
 		# should evaluate what we do with keys that are not found
 		# or have values that are None or nil or empty
 		pass
-		
-	def test_update_job(self):
-		# validate parameters
-#		self.job.update({'TOTAL_CORES':12})
-#		assert self.job.simulator_parameters['TOTAL_CORES'] == 12
-#		self.job.update({'TOTAL_CORES'})
-#		assert self.job.simulator_parameters['TOTAL_CORES'] == None
-		pass
-		
+				
 	def test_delete_job(self):
 		pass
 		
