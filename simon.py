@@ -231,22 +231,30 @@ def get_job(job_id):
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-	# create a job
-    # to submit a job:
-    # get request parameters (form data?)
-    # create object, populate with request data
-    # save in db
-    # serialize and send to simulator
-    #job = Job.Job()
-    user_input = request.form
-    #job.update(user_input)
+    
+    # make sure user is authenticated
+    if g.user is None:
+        return '', 401
     
     if len(user_input.keys()) == 0:
-        # this is a request sent without
-        # simulator parameters.
-        # it should be rejected.
+        # must have simulator parameters.
         return '', 400
     else:
+        # get form data
+        user_input = request.form
+        
+        # create a Job object
+        job = Job.Job()
+        # set the owner to the current user
+        job.owner = g.user
+        # populate with supplied parameters
+        job.update(user_input)
+        # save to db
+        job.save(jobs)
+        # send to simulator
+        job.submit() # callback?
+        
+        # need to return the new job's id in the response
         return json.dumps(user_input), 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
@@ -274,7 +282,6 @@ def get_results():
             return '', 501
     else:
         return '', 401
-
 
     return render_template('results.html')
 
@@ -357,7 +364,7 @@ def show_faq():
 def run_simulation():
     return render_template('simulation.html')
 
-""" 
+"""
 --------------------------------------------
 app startup
 --------------------------------------------

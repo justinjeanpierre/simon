@@ -4,6 +4,8 @@ import SimulatorParameters
 from flask.ext.pymongo import PyMongo
 from flask import g
 
+import requests
+
 class Job:
 	def __init__(self):
 		self.id = None # string
@@ -15,19 +17,15 @@ class Job:
 		# add params from user's input
 		# (will accept dictionary of parameters)
 		
-		# load supplied values
-
+		# parse supplied values
 		for key in dict.keys():
 			for k in self.simulator_parameters:
 				if k == key:
-					#figure out types (num -> num, string -> string, etc.)
 					# (validate first, maybe?)
 					self.simulator_parameters[k] = dict[key]
 		
 	def submit(self):
-		# save user input
-		# send to simulator (104.200.30.65)
-		pass
+		req = requests.post('http://104.200.30.65/', data = {'simulator_parameters':self.simulator_parameters}) # callback or completion handler?
 		
 	def cancel(self):
 		# just delete it from the database
