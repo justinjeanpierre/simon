@@ -192,9 +192,7 @@ Form functions
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
 #   get a list of all jobs
-#   (...to which this authenticated user has access)
-    someJob = Job.Job()
-    
+#   (...to which this authenticated user has access)    
     return '', 501
    
 @app.route('/jobs/<job_id>', methods=['GET'])
