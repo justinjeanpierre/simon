@@ -1,19 +1,18 @@
 #!/usr/bin/python
 
-# import Job
-import Config
 import Job
 import Result
+import Config
+from Config import DevelopmentConfig, TestingConfig
 
-import os, json
+import os, json, ast
+import jsonpickle
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
-from Config import DevelopmentConfig, TestingConfig
 
 # OAuth
 from flask_oauthlib.client import OAuth, OAuthException
-import jsonpickle
 
 # persistence
 from flask.ext.pymongo import PyMongo
@@ -95,7 +94,8 @@ def oauthorized():
         flash('You denied the request to sign in.')
     else:
         session['twitter_oauth'] = resp
-    user_id = resp['user_id']
+        g.user = resp['user_id']
+        
     return redirect(url_for('index'))
 
 """ 
@@ -135,8 +135,9 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+    
     return redirect(url_for('index'))
-
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -185,6 +186,8 @@ def facebook_authorized():
 
     session['facebook_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+    g.user = json.loads(getattr(me, 'raw_data'))['id']
+
     return redirect(url_for('index'))
 
 @facebook.tokengetter
@@ -203,7 +206,7 @@ Form functions
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
 #   get a list of all jobs
-#   (...to which this authenticated user has access)
+#   (...to which this authenticated user has access)    
 
     return '', 501
     
