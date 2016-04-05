@@ -54,11 +54,11 @@ results = db.results
 def before_request():
     g.user = None
     if 'twitter_oauth' in session:
-        g.user = session['twitter_oauth']
+        g.user = session['twitter_oauth']['user_id']
     elif 'google_token' in session:
-        g.user = session['google_token']
+        g.user = json.loads(getattr(google.get('userinfo'), 'raw_data'))['id']
     elif 'facebook_token' in session:
-        g.user = session['facebook_token']
+        g.user = json.loads(getattr(facebook.get('/me'), 'raw_data'))['id']
 
 """ 
 --------------------------------------------
@@ -200,33 +200,34 @@ Form functions
 --------------------------------------------
 """
 
-# set up mongo here
-
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#   get a list of all jobs
-#   (...to which this authenticated user has access)    
+#   get the authenticated user's jobs
 
-    return '', 501
-    
-    # probably something like this:
-#    user_jobs = Job.Job.find_by_user_id(g.user, jobs)
-#    if user_jobs is not None:
-#        return jsonpickle.encode(user_jobs), 200
-#    else:
-#        return '', 501
-   
+    if g.user is not None:
+        user_jobs = Job.Job.find_by_user_id(g.user, jobs)
+        
+        if user_jobs is not None:
+            return jsonpickle.encode(user_jobs), 200
+        else:
+            return '', 501
+    else:
+        return '', 401
+
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
 #   get a specific job
 
-    job = Job.Job.find_by_id(str(job_id), jobs)
+    job = Job.Job.find_by_id(str(job_id), g.user, jobs)
+    
+    if g.user is None:
+        return '', 401
 
     if job is not None:
         return jsonpickle.encode(job), 200
     else:
-        return job_id, 500
+        return 'Invalid simulation id: ' + str(job_id), 404
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
@@ -327,7 +328,13 @@ def show_docs():
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
-	
+
+""" 
+--------------------------------------------
+app startup
+--------------------------------------------
+"""
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
