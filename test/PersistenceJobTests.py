@@ -6,7 +6,6 @@ from flask import Flask
 from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
 from Config import TestingConfig
-import json
 
 import simon
 import Job

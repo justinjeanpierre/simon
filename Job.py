@@ -54,7 +54,9 @@ class Job:
 
 		retval = Job() # empty Job to be returned later
 		
-		res = mongoCollection.find_one({'identifier':job_id})
+		# this query needs to have the currently logged-in user's identifier
+		# passed in as the owner, or else everyone's jobs will be returned
+		res = mongoCollection.find_one({'identifier':job_id}, {'_id':0}) # we don't need the object's _id
 		if res is not None:
 			try:
 				retval.id = res['identifier']
@@ -79,6 +81,7 @@ class Job:
 				pass
 		else:
 			pass
+		
 		return retval
 		
 	@classmethod
@@ -94,7 +97,11 @@ class Job:
 		
 		retval = Job()
 	
-		res = mongoCollection.find_one({'owner':user_id})
+		
+		res = mongoCollection.find_one({'owner':user_id}, {'_id':0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's jobs.
+		
 		if res is not None:
 			# only populate the object with db fields that exist
 			try:
