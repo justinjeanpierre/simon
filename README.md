@@ -1,4 +1,4 @@
-[![Build Status](https://semaphoreci.com/api/v1/justinjeanpierre/simon/branches/ci-setup/badge.svg)](https://semaphoreci.com/justinjeanpierre/simon)
+[![Build Status](https://semaphoreci.com/api/v1/justinjeanpierre/simon/branches/develop/badge.svg)](https://semaphoreci.com/justinjeanpierre/simon)
 # simon
 Simulator controller.
 

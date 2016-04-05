@@ -10,6 +10,8 @@ from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from Config import DevelopmentConfig, TestingConfig
+
+# OAuth
 from flask_oauthlib.client import OAuth, OAuthException
 import jsonpickle
 
@@ -317,7 +319,7 @@ def logout():
 # show the documentation
 @app.route('/docs', methods=['GET'])
 def show_docs():
-    return '', 501
+    return render_template('docs.html')
 
 @app.route('/run', methods=['GET'])
 def run_simulation():
