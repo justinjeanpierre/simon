@@ -149,3 +149,47 @@ class Job:
 			pass
 
 		return retval
+
+	@classmethod
+	def all_jobs(_class, mongoCollection = None):
+		
+		if mongoCollection == None:
+			return None
+			
+		res = mongoCollection.find({}, {'_id':0, 'simulator_parameters': 0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's results.
+		
+		retval = []
+
+		if res is not None:
+			
+			for d in list(res):
+				j = Job()
+				
+				# only populate the object with db fields that exist
+				try:
+					j.id = d['identifier']
+				except:
+					pass
+					
+				try:
+					j.owner = d['owner']
+				except:
+					pass
+					
+				try:
+					j.status = d['status']
+				except:
+					pass
+					
+				try:
+					j.simulator_parameters = d['simulator_parameters']
+				except:
+					pass
+					
+				retval.append(j)
+		else:
+			pass
+			
+		return retval

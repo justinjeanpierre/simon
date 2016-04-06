@@ -214,6 +214,19 @@ def get_jobs():
     else:
         return '', 401
 
+@app.route('/public/jobs', methods=['GET'])
+def get_all_jobs():
+#   get a list of all public jobs
+
+    all_jobs = Job.Job.all_jobs(jobs)
+
+    if all_jobs is not None:
+        return jsonpickle.encode(all_jobs), 200
+    else:
+        return '', 401
+
+    return 'all', 200
+
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
 #   get a specific job
@@ -278,14 +291,13 @@ def get_results():
 
     return render_template('results.html'), 200
 
-@app.route('/all-results', methods=['GET'])
+@app.route('/public/results', methods=['GET'])
 def get_all_results():
 #   get a list of all results to which this authenticated user has access
 
     all_results = Result.Result.all_results(results)
 
     if all_results is not None:
-        print all_results
         return jsonpickle.encode(all_results), 200
     else:
         return '', 401
