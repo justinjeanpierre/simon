@@ -215,7 +215,7 @@ def get_jobs():
         return '', 401
 
 @app.route('/public/jobs', methods=['GET'])
-def get_all_jobs():
+def get_public_jobs():
 #   get a list of all public jobs
 
     all_jobs = Job.Job.all_jobs(jobs)
@@ -292,7 +292,7 @@ def get_results():
     return render_template('results.html'), 200
 
 @app.route('/public/results', methods=['GET'])
-def get_all_results():
+def get_public_results():
 #   get a list of all results to which this authenticated user has access
 
     all_results = Result.Result.all_results(results)
