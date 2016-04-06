@@ -236,26 +236,22 @@ def post_job():
     if g.user is None:
         return '', 401
     
-    if len(user_input.keys()) == 0:
-        # must have simulator parameters.
+    if len(request.form.keys()) == 0:
+        # request must have simulator parameters.
         return '', 400
     else:
-        # get form data
-        user_input = request.form
-        
         # create a Job object
         job = Job.Job()
         # set the owner to the current user
         job.owner = g.user
         # populate with supplied parameters
-        job.update(user_input)
+        job.update(request.form)
         # save to db
-        job.save(jobs)
+        new_job_id = job.save(jobs)
         # send to simulator
         job.submit() # callback?
         
-        # need to return the new job's id in the response
-        return json.dumps(user_input), 200
+        return jsonpickle.encode({'identifier':new_job_id}), 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
