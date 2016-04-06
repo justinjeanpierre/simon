@@ -5,8 +5,7 @@
 import Config
 from Config import DevelopmentConfig, TestingConfig
 
-import os, json, ast
-import jsonpickle
+import os, json, jsonpickle, requests
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
@@ -237,6 +236,7 @@ def post_job():
     # save in db
     # serialize and send to simulator
     #job = Job.Job()
+    url = "http://104.200.30.65:8889/"
     user_input = request.form
     #job.update(user_input)
     
@@ -246,7 +246,8 @@ def post_job():
         # it should be rejected.
         return '', 400
     else:
-        return json.dumps(user_input), 200
+        shit = requests.post(url, data=json.dumps(user_input)).text
+        return shit, 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -264,7 +265,8 @@ def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
 
-    return render_template('results.html')
+    print request.json
+    return render_template('results.html'), 200
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
@@ -337,5 +339,5 @@ def run_simulation():
     return render_template('simulation.html')
 	
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8889))
     app.run(host='0.0.0.0', port=port)
