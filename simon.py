@@ -5,8 +5,7 @@ import Result
 import Config
 from Config import DevelopmentConfig, TestingConfig
 
-import os, json, ast
-import jsonpickle
+import os, json, jsonpickle, requests
 from flask import Flask, jsonify
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
@@ -231,7 +230,6 @@ def get_job(job_id):
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-    
     # make sure user is authenticated
     if g.user is None:
         return '', 401
@@ -278,7 +276,8 @@ def get_results():
     else:
         return '', 401
 
-    return render_template('results.html')
+    print request.json
+    return render_template('results.html'), 200
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
@@ -361,5 +360,5 @@ app startup
 """
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8889))
     app.run(host='0.0.0.0', port=port)

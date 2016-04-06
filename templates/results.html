@@ -1,8 +1,70 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="row"><div class="col-md-12">
-		<div class="jumbotron">
-		<p>Results page</p>
-	</div>
+    <script>
+	    window.onload = function () {
+		var data = '[{"total_mem_accesses": [5202.0, 2920.0, 2954.0, 0.0], "target_instructions": [3525.0, 2007.0, 2031.0, 0.0], "host_initialization_time": 5847098.0, "l1cache_accesses": [513.0, 320.0, 325.0, 0.0], "target_time": [91534.0, 89046.0, 89027.0, 0.0], "host_time": 16250496.0, "host_working_time": 7397564.0, "l2cache_accesses": [283.0, 224.0, 226.0, 0.0], "memory": [41826.0, 29199.0, 29734.0, 0.0], "avg_packet_latency": [24.0288, 21.6333, 20.6379, 6.33333], "total_dram_accesses": [14.0, 8.0, 6.0, 6.0], "host_shutdown_time": 3005834.0, "total_bits_sent": [169536.0, 22784.0, 20736.0, 2880.0], "total_flits_received": [2342.0, 2016.0, 2043.0, 14.0], "l1cache_misses": [181.0, 141.0, 144.0, 0.0], "avg_dram_latency": [113.0, 113.0, 113.0, 113.0], "total_flits_sent": [2649.0, 356.0, 324.0, 45.0], "total_bits_received": [149888.0, 129024.0, 130752.0, 896.0], "num_cores": 4, "execution_units": [2184.0, 1180.0, 1226.0, 0.0], "l2cache_misses": [261.0, 224.0, 226.0, 0.0], "total_packets_sent": [529.0, 252.0, 252.0, 5.0], "l2miss_rate": [92.2261, 100.0, 100.0, 0.0]}]'
+		var obj = JSON.parse(data)
+		for(var key in obj[0]){
+			if ((key == "host_initialization_time") || (key == "host_time") || (key == "host_working_time") || (key == "host_shutdown_time") || (key == "num_cores")){
+
+			} else{
+				var dps = []
+				for(i = 0; i < obj[0][key].length; i++){
+					dps.push({y: obj[0][key][i], label: "Core " + (i+1)});
+				}
+				var chart = new CanvasJS.Chart("chartContainer_"+key, {
+					title:{
+						text:key				
+					},
+			        animationEnabled: true,
+					axisX:{
+						interval: 1,
+						gridThickness: 0,
+						labelFontSize: 10,
+						labelFontStyle: "normal",
+						labelFontWeight: "normal",
+						labelFontFamily: "Lucida Sans Unicode"
+
+					},
+					axisY2:{
+						interlacedColor: "rgba(1,77,101,.2)",
+						gridColor: "rgba(1,77,101,.1)"
+
+					},
+					data: [
+					{     
+						type: "bar",
+			            		name: "",
+						axisYType: "secondary",
+						color: "#014D65",				
+						dataPoints: dps
+					}
+					
+					]
+				});
+
+			chart.render();
+		}
+		}
+	}
+		
+    </script>
+	<div class="row"><div class="col-md-6"> 
+		<script type="text/javascript" src="static/canvasjs.min.js"></script>
+		<body>
+			<div id="chartContainer_total_mem_accesses" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_target_instructions" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_l1cache_accesses" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_target_time" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_l2cache_accesses" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_memory" style="height: 300px; width: 100%;"></div>
+
+			<div id="chartContainer_avg_packet_latency" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_total_dram_accesses" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_total_bits_sent" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_total_flits_received" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_l1cache_misses" style="height: 300px; width: 100%;"></div>
+			<div id="chartContainer_avg_dram_latency" style="height: 300px; width: 100%;"></div>
+		</body>
 	</div></div>
 {% endblock %}

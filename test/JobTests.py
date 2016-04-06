@@ -14,12 +14,12 @@ class JobTestCase(unittest.TestCase):
 		# destroy test db
 		pass
 		
-	def test_default_params(self):
-		d = self.job.simulator_parameters
-
-		assert d['GENERAL_OUTPUT_FILE'] == 'sim.out'
-		assert d['GENERAL_TOTAL_CORES'] == 64
-		assert d['GENERAL_ENABLE_MODELING_CORE'] == True
+#	def test_default_params(self):
+#		d = self.job.simulator_parameters
+#
+#		assert d['GENERAL_OUTPUT_FILE'] == 'sim.out'
+#		assert d['GENERAL_TOTAL_CORES'] == 64
+#		assert d['GENERAL_ENABLE_MODELING_CORE'] == True
 					
 	def test_empty_param_handling(self):
 		# should evaluate what we do with keys that are not found

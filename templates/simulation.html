@@ -1,40 +1,305 @@
 {% extends 'base.html' %}
 {% block content %}
 	<div class="row">
-		<div class="col-md-5">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
 				<h2 class="page-header">{% block title %}Run Simulation{% endblock %}</h2>
-				<form method="post" class="form-horizontal" action="/jobs">
+				<form id="sim-form" method="post" class="form-horizontal" action="/jobs">
 	            	<div class="form-group">
 	                	<div class="col-sm-2"></div>
 	            	</div>
-	            	<label for="nc">Number of Cores:</label>
-	            	<input type="text" class="form-control" name="GENERAL_TOTAL_CORES" id = "nc" value="{{request.form.GENERAL_TOTAL_CORES}}">
+	            	<h3>General</h3>
+	            	<label for="nc">Total Cores:</label>
+	            	<select type="text" class="form-control" name="total_cores" id = "nc">
+	            		<option>4</option>
+        				<option>8</option>
+        				<option>16</option>
+        				<option>32</option>
+        				<option>64</option>
+        				<option>128</option>
+        				<option>256</option>
+        			</select>
 	            	<p></p>
-	            	<label for="np">Number of Processes:</label>
-	            	<input type="text" class="form-control" name="GENERAL_NUM_PROCESSES" id = "np" value="{{request.form.GENERAL_NUM_PROCESSES}}">
+	            	<label for="tn">Technology Node (nm):</label>
+	            	<select type="text" class="form-control" name="technology_node" id = "tn">
+	            		<option>22</option>
+        				<option>32</option>
+        				<option>45</option>
+        			</select>
 	            	<p></p>
-	            	<label for="mf">Maximum Frequency:</label>
-	            	<input type="text" class="form-control" name="GENERAL_MAX_FREQUENCY" id = "mf" value="{{request.form.GENERAL_MAX_FREQUENCY}}">
+	            	<label for="mt">Temperature (Kelvin):</label>
+	            	<input type="text" class="form-control" name="temperature" id = "mt" value="300">
 	            	<p></p>
-	            	<label for="mt">Temperature:</label>
-	            	<input type="text" class="form-control" name="GENERAL_TEMPERATURE" id = "mt" value="{{request.form.GENERAL_TEMPERATURE}}">
+
+	            	<h3>Static Instruction Cost (In Cycles)</h3>
+	            	<label for="gen">Generic:</label>
+	            	<input type="text" class="form-control" name="generic" id = "gen" value="1">
 	            	<p></p>
-	            	<div class="checkbox">
-      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_CORE" value="true">Enable Modeling Core</label>
-    				</div>
-    				<div class="checkbox">
-      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_POWER" value="true">Enable Modeling Power</label>
-    				</div>
-    				<div class="checkbox">
-      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_AREA" value="true">Enable Modeling Area</label>
-    				</div>
-      				<p></p>
+	            	<label for="mov">Mov:</label>
+	            	<input type="text" class="form-control" name="mov" id = "mov" value="1">
+	            	<p></p>
+	            	<label for="ialu">IALU:</label>
+	            	<input type="text" class="form-control" name="ialu" id = "ialu" value="1">
+	            	<p></p>
+	            	<label for="imul">IMUL:</label>
+	            	<input type="text" class="form-control" name="imul" id = "imul" value="3">
+	            	<p></p>
+	            	<label for="idiv">IDIV:</label>
+	            	<input type="text" class="form-control" name="idiv" id = "idiv" value="18">
+	            	<p></p>
+	            	<label for="falu">FALU:</label>
+	            	<input type="text" class="form-control" name="falu" id = "falu" value="3">
+	            	<p></p>
+	            	<label for="fmul">FMUL:</label>
+	            	<input type="text" class="form-control" name="fmul" id = "fmul" value="5">
+	            	<p></p>
+	            	<label for="fdiv">FDIV:</label>
+	            	<input type="text" class="form-control" name="fdiv" id = "fdiv" value="6">
+	            	<p></p>
+	            	<label for="xmm_ss">XMM_SS:</label>
+	            	<input type="text" class="form-control" name="xmm_ss" id = "xmm_ss" value="6">
+	            	<p></p>
+	            	<label for="xmm_sd">XMM_SD:</label>
+	            	<input type="text" class="form-control" name="xmm_sd" id = "xmm_sd" value="6">
+	            	<p></p>
+	            	<label for="xmm_ps">XMM_PS:</label>
+	            	<input type="text" class="form-control" name="xmm_ps" id = "xmm_ps" value="6">
+	            	<p></p>
+
+	            	<h3>Branch Predictor</h3>
+	            	<label for="misp">Mispredict Penalty (In Cycles):</label>
+	            	<input type="text" class="form-control" name="mispredict_penalty" id = "misp" value="14">
+	            	<p></p>
+
+	            	<h3>L1 ICACHE T1</h3>
+	            	<label for="icls">Cache Line Size (In Bytes):</label>
+	            	<select type="text" class="form-control" name="l1i_cache_line_size" id = "icls" value="{{request.form.cache_line_size}}">
+	            		<option>64</option>
+        				<option>128</option>
+        			</select>
+	            	<p></p>
+	            	<label for="ics">Cache Size (In KB):</label>
+	            	<select type="text" class="form-control" name="l1i_cache_size" id = "ics" value="{{request.form.cache_size}}">
+	            		<option>32</option>
+        				<option>64</option>
+        			</select>
+	            	<p></p>
+	            	<label for="iassoc">associativity:</label>
+	            	<input type="text" class="form-control" name="l1i_associativity" id = "iassoc" value="4">
+	            	<p></p>
+	            	<label for="inumb">Number of Banks:</label>
+	            	<input type="text" class="form-control" name="l1i_num_banks" id = "inumb" value="1">
+	            	<p></p>
+	            	<label for="ireplpo">Replacement Policy:</label>
+	            	<input type="text" class="form-control" name="l1i_replacement_policy" id = "ireplpo" value="lru">
+	            	<p></p>
+	            	<label for="idat">Data Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l1i_data_access_time" id = "idat" value="1">
+	            	<p></p>
+	            	<label for="itat">Tags Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l1i_tags_access_time" id = "itat" value="1">
+	            	<p></p>
+	            	<label for="ipmt">Performance Model Type:</label>
+	            	<select type="text" class="form-control" name="l1i_perf_model_type" id = "ipmt" value="{{request.form.perf_model_type}}">
+	            		<option>Parallel</option>
+        				<option>Sequential</option>
+        			</select>
+	            	<p></p>
+	            	<label for="itmt">Track Miss Type:</label>
+	            	<select type="text" class="form-control" name="l1i_track_miss_types" id = "itmt" value="{{request.form.track_miss_types}}">
+	            		<option>true</option>
+        				<option>false</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>L1 DCACHE T1</h3>
+	            	<label for="dcls">Cache Line Size (In Bytes):</label>
+	            	<select type="text" class="form-control" name="l1d_cache_line_size" id = "dcls" value="{{request.form.cache_line_size}}">
+	            		<option>64</option>
+        				<option>128</option>
+        			</select>
+	            	<p></p>
+	            	<label for="dcs">Cache Size (In KB):</label>
+	            	<select type="text" class="form-control" name="l1d_cache_size" id = "dcs" value="{{request.form.cache_size}}">
+	            		<option>32</option>
+        				<option>64</option>
+        			</select>
+	            	<p></p>
+	            	<label for="dassoc">associativity:</label>
+	            	<input type="text" class="form-control" name="l1d_associativity" id = "dassoc" value="4">
+	            	<p></p>
+	            	<label for="dnumb">Number of Banks:</label>
+	            	<input type="text" class="form-control" name="l1d_num_banks" id = "dnumb" value="1">
+	            	<p></p>
+	            	<label for="dreplpo">Replacement Policy:</label>
+	            	<input type="text" class="form-control" name="l1d_replacement_policy" id = "dreplpo" value="lru">
+	            	<p></p>
+	            	<label for="ddat">Data Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l1d_data_access_time" id = "ddat" value="1">
+	            	<p></p>
+	            	<label for="dtat">Tags Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l1d_tags_access_time" id = "dtat" value="1">
+	            	<p></p>
+	            	<label for="dpmt">Performance Model Type:</label>
+	            	<select type="text" class="form-control" name="l1d_perf_model_type" id = "dpmt" value="{{request.form.perf_model_type}}">
+	            		<option>Parallel</option>
+        				<option>Sequential</option>
+        			</select>
+	            	<p></p>
+	            	<label for="dtmt">Track Miss Type:</label>
+	            	<select type="text" class="form-control" name="l1d_track_miss_types" id = "dtmt" value="{{request.form.track_miss_types}}">
+	            		<option>true</option>
+        				<option>false</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>L2 CACHE T1</h3>
+	            	<label for="cls2">Cache Line Size (In Bytes):</label>
+	            	<select type="text" class="form-control" name="l2_cache_line_size" id = "cls2" value="{{request.form.cache_line_size}}">
+	            		<option>64</option>
+        				<option>128</option>
+        			</select>
+	            	<p></p>
+	            	<label for="cs2">Cache Size (In KB):</label>
+	            	<select type="text" class="form-control" name="l2_cache_size" id = "cs2" value="{{request.form.cache_size}}">
+	            		<option>512</option>
+        				<option>1024</option>
+        			</select>
+	            	<p></p>
+	            	<label for="assoc2">associativity:</label>
+	            	<input type="text" class="form-control" name="l2_associativity" id = "assoc2" value="8">
+	            	<p></p>
+	            	<label for="numb2">Number of Banks:</label>
+	            	<input type="text" class="form-control" name="l2_num_banks" id = "numb2" value="2">
+	            	<p></p>
+	            	<label for="replpo2">Replacement Policy:</label>
+	            	<input type="text" class="form-control" name="l2_replacement_policy" id = "replpo2" value="lru">
+	            	<p></p>
+	            	<label for="dat2">Data Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l2_data_access_time" id = "dat2" value="8">
+	            	<p></p>
+	            	<label for="tat2">Tags Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="l2_tags_access_time" id = "tat2" value="3">
+	            	<p></p>
+	            	<label for="pmt2">Performance Model Type:</label>
+	            	<select type="text" class="form-control" name="l2_perf_model_type" id = "pmt2" value="{{request.form.perf_model_type}}">
+	            		<option>Parallel</option>
+        				<option>Sequential</option>
+        			</select>
+	            	<p></p>
+	            	<label for="tmt2">Track Miss Type:</label>
+	            	<select type="text" class="form-control" name="l2_track_miss_types" id = "tmt2" value="{{request.form.track_miss_types}}">
+	            		<option>true</option>
+        				<option>false</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>L2 Directory</h3>
+	            	<label for="mhs">Max Hardware Sharers:</label>
+	            	<select type="text" class="form-control" name="l2_dir_max_hw_sharers" id = "mhs" value="64">
+	            		<option>64</option>
+        				<option>128</option>
+        			</select>
+	            	<p></p>
+	            	<label for="dt">Directory Type:</label>
+	            	<select type="text" class="form-control" name="l2_dir_directory_type" id = "dt" value="{{request.form.directory_type}}">
+	            		<option>full_map</option>
+        				<option>limited_broadcast</option>
+        				<option>limited_no_broadcast</option>
+        				<option>ackwise</option>
+        				<option>limitless</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>Dram Directory</h3>
+	            	<label for="te">Total Entries:</label>
+	            	<input type="text" class="form-control" name="dram_dir_total_entries" id = "te" value="auto">
+	            	<p></p>
+	            	<label for="assoc_dr">associativity:</label>
+	            	<input type="text" class="form-control" name="dram_dir_associativity" id = "assoc_dr" value="16">
+	            	<p></p>
+	            	<label for="mhs_dr">Max Hardware Sharers:</label>
+	            	<select type="text" class="form-control" name="dram_dir_max_hw_sharers" id = "mhs_dr" value="{{request.form.max_hw_sharers}}">
+	            		<option>64</option>
+        				<option>128</option>
+        			</select>
+	            	<p></p>
+	            	<label for="dt_dr">Directory Type:</label>
+	            	<select type="text" class="form-control" name="dram_dir_directory_type" id = "dt_dr" value="{{request.form.directory_type}}">
+	            		<option>full_map</option>
+        				<option>limited_broadcast</option>
+        				<option>limited_no_broadcast</option>
+        				<option>ackwise</option>
+        				<option>limitless</option>
+        			</select>
+	            	<p></p>
+	            	<label for="at">Access Time (In Cycles):</label>
+	            	<input type="text" class="form-control" name="access_time" id = "at" value="auto">
+	            	<p></p>
+
+	            	<h3>Limitless</h3>
+	            	<label for="stp">Software Trap Penalty (In Cycle):</label>
+	            	<input type="text" class="form-control" name="software_trap_penalty" id = "stp" value="200">
+	            	<p></p>
+
+	            	<h3>Caching Protocol</h3>
+	            	<label for="type">Type:</label>
+	            	<select type="text" class="form-control" name="type" id = "type" value="{{request.form.type}}">
+	            		<option>pr_l1_pr_l2_dram_directory_msi</option>
+        				<option>pr_l1_pr_l2_dram_directory_mosi</option>
+        				<option>pr_l1_sh_l2_msi</option>
+        				<option>pr_l1_sh_l2_mesi</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>Dram</h3>
+	            	<label for="lat">Latency (in Nanoseconds):</label>
+	            	<input type="text" class="form-control" name="latency" id = "lat" value="100">
+	            	<p></p>
+	            	<label for="pcb">Per Controller Bandwidth (In GB/s):</label>
+	            	<input type="text" class="form-control" name="per_controller_bandwidth" id = "pcb" value="5">
+	            	<p></p>
+	            	<label for="nc">Number of Controllers:</label>
+	            	<input type="text" class="form-control" name="num_controllers" id = "nc" value="ALL">
+	            	<p></p>
+	            	<label for="cp">Controller Positions:</label>
+	            	<input type="text" class="form-control" name="controller_positions" id = "cp" value="">
+	            	<p></p>
+
+	            	<h3>Network</h3>
+	            	<label for="usr">User:</label>
+	            	<select type="text" class="form-control" name="user" id = "usr" value="{{request.form.user}}">
+	            		<option>emesh_hop_counter</option>
+        				<option>emesh_hop_by_hop</option>
+        				<option>atac</option>
+        			</select>
+	            	<p></p>
+	            	<label for="mem">Memory:</label>
+	            	<select type="text" class="form-control" name="memory" id = "mem" value="{{request.form.memory}}">
+	            		<option>emesh_hop_counter</option>
+        				<option>emesh_hop_by_hop</option>
+        				<option>atac</option>
+        			</select>
+	            	<p></p>
+
+	            	<h3>Application to Run</h3>
+	            	<label for="usr">Apps:</label>
+	            	<select type="text" class="form-control" name="app" id = "app" value="{{request.form.user}}">
+	            		<option>ping_pong</option>
+        				<option>barnes</option>
+        				<option>cholesky</option>
+        				<option>fft</option>
+        			</select>
+	            	<p></p>
+
 					<div class="form-group">
 						<div class="col-sm-offset-0 col-sm-1">
-	                		<button type="submit" class="btn btn-primary">Run Simulation</button>
+	                		<button id="run-job-btn" type="button" class="btn btn-primary">Run Simulation</button>
 	        			</div>
 	        		</div>
     			</form>
 		</div>
+
+		<div class="col-md-3"></div>
 	</div>
 {% endblock %}

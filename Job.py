@@ -3,32 +3,31 @@
 import SimulatorParameters
 from flask.ext.pymongo import PyMongo
 from flask import g
+import sys, json
 
 import requests
+import jsonpickle
 
 class Job:
 	def __init__(self):
 		self.id = None # string
 		self.owner = None # string
 		self.status = None # some custom enum-like type?
-		self.simulator_parameters = SimulatorParameters.SimulatorParameters().defaultParametersDictionary()
+		self.simulator_parameters = {} # SimulatorParameters.SimulatorParameters().defaultParametersDictionary()
 		
 	def update(self, dict):
 		# add params from user's input
-		# (will accept dictionary of parameters)
-		
-		# parse supplied values
+
+		# parse supplied values		
 		for key in dict.keys():
-			for k in self.simulator_parameters:
-				if k == key:
-					# (validate first, maybe?)
-					self.simulator_parameters[k] = dict[key]
-		
+			self.simulator_parameters[key] = dict[key]
+			
 	def submit(self):
 		try:
-			req = requests.post('http://104.200.30.65/', data = {'simulator_parameters':self.simulator_parameters}) # callback or completion handler?
+			req = requests.post('http://104.200.30.65:8889/', data = json.dumps(self.simulator_parameters))
 		except:
 			print 'could not connect to simulator'
+			print sys.exc_info()[0]
 		
 	def cancel(self):
 		# just delete it from the database

@@ -1,8 +1,105 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="row"><div class="col-md-12">
-		<div class="jumbotron">
-		<p>FAQ page</p>
-	</div>
-	</div></div>
+	<h2 class="page-header">{% block title %}FAQ Page{% endblock %}</h2>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <!-- Nav tabs category -->
+            <ul class="nav nav-tabs faq-cat-tabs">
+                <li class="active"><a href="#faq-cat-1" data-toggle="tab">General</a></li>
+                <li><a href="#faq-cat-2" data-toggle="tab">Usage Details</a></li>
+            </ul>
+
+            <p></br>In this section, we try to answer the Frequently Asked Questions by our users. If we didn't answer your question here you can always <a href="mailto:sim@asaservice.com">email us</a> and we will try to respond as fast as we can. If they are relevant enough, we will add them to </br></p>
+
+            <!-- Tab panes -->
+            <div class="tab-content faq-cat-content">
+                <div class="tab-pane active in fade" id="faq-cat-1">
+                    <div class="panel-group" id="accordion-cat-1">
+                        <div class="panel panel-default panel-faq">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion-cat-1" href="#faq-cat-1-sub-1">
+                                    <h4 class="panel-title">
+                                        What was the purpose of building this tool?
+                                        <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="faq-cat-1-sub-1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    The goal is to provide Graphite, an open-source, distributed parallel simulator for multicore architectures developed by MIT as a service. This makes Computer Architects and Engineers spend their time on design instead of software configuration and development.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-faq">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion-cat-1" href="#faq-cat-1-sub-2">
+                                    <h4 class="panel-title">
+                                        Why the choice of Graphite over other simulators?
+                                        <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="faq-cat-1-sub-2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    One of the main reasons behind this choice is that Graphite is capable of accelerating simulations by distributing them across multiple commodity Linux machines. 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-faq">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion-cat-1" href="#faq-cat-1-sub-3">
+                                    <h4 class="panel-title">
+                                        Are there any restrictions on the usage?
+                                        <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="faq-cat-1-sub-3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Graphite is open-source under the MIT license, hence, we follow the same philosophy. Permission is hereby granted, free of charge, to any person to use this application and associated documentation files (the "Software"), to deal in the Software without restriction and for any purposes of use governed by the law.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="faq-cat-2">
+                    <div class="panel-group" id="accordion-cat-2">
+                        <div class="panel panel-default panel-faq">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion-cat-2" href="#faq-cat-2-sub-1">
+                                    <h4 class="panel-title">
+                                        Is this the final state of the project?
+                                        <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="faq-cat-2-sub-1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    No, the project is still in development. We plan on expanding to have diff modes of running jobs i.e. basic and advanced making the designed processors more configurable. Finally, we also plan on expanding on the choice of application to have more than just four.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-faq">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion-cat-2" href="#faq-cat-2-sub-2">
+                                    <h4 class="panel-title">
+                                        Are there limitations to what can be done?
+                                        <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="faq-cat-2-sub-2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    As of now, paying for compute resources is expensive and any donations could help. If interested, <a href="mailto:sim@asaservice.com">email us</a>. Donation money would especially allow us to improve the performance in the future. Thank you in advance =]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
 {% endblock %}

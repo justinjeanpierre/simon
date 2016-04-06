@@ -63,3 +63,4 @@ target/
 
 #files
 Config.py
+.env
