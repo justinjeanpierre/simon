@@ -227,7 +227,7 @@ def get_job(job_id):
     if job is not None:
         return jsonpickle.encode(job), 200
     else:
-        return 'Invalid simulation id: ' + str(job_id), 404
+        return 'Invalid or unauthorized id: ' + str(job_id), 404
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
@@ -266,8 +266,7 @@ def delete_job(job_id):
 # results routes
 @app.route('/results', methods=['GET'])
 def get_results():
-#   get a list of all results
-#   (...to which this authenticated user has access)
+#   get a list of all results to which this authenticated user has access
 
     if g.user is not None:
         user_results = Result.Result.find_by_user_id(g.user, results)
@@ -285,13 +284,7 @@ def get_results():
 def get_result(result_id):
 #   get one of the user's results
 
-#    result = Result.Result.find_by_id(str(result_id), results)
-#
-#    if result is not None:
-#        return jsonpickle.encode(result), 200
-#    else:
-#        return result_id, 500
-    result =  Result.Result.find_by_id(str(result_id), g.user, jobs)
+    result =  Result.Result.find_by_id(str(result_id), g.user, results)
 
     if g.user is None:
         return '', 401
@@ -299,22 +292,23 @@ def get_result(result_id):
     if result is not None:
         return jsonpickle.encode(result), 200
     else:
-        return 'Invalid simulation id: ' + str(result_id), 404
+        return 'Invalid or unauthorized id: ' + str(result_id), 404
     
 @app.route('/results', methods=['POST'])
 def post_result():
-    # validate results returned from simulator,
-    # create a Result object,
-    # save it in the db.
-
-    return '', 501
     
-    # probably something like this:
-#    user_results = Result.Result.find_by_user_id(g.user, results)
-#    if user_results is not None:
-#        return jsonpickle.encode(user_results), 200
-#    else:
-#        return '', 501
+    if len(request.form.keys()) == 0:
+        return '', 400
+    else:
+        # create a Result object
+        result = Result.Result()
+        
+        # populate it
+        result.update(request.form)
+        # save it
+        new_result_id = result.save(results)        
+
+        return jsonpickle.encode({'identifier':new_result_id}), 200 # should return new Result's id
 
 # stats routes
 @app.route('/stats', methods=['GET'])
