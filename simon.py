@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import Job
-import Result
+# import Job
+# import Result
 import Config
 from Config import DevelopmentConfig, TestingConfig
 
@@ -15,8 +15,8 @@ from flask import redirect, render_template
 from flask_oauthlib.client import OAuth, OAuthException
 
 # persistence
-from flask.ext.pymongo import PyMongo
-from pymongo import MongoClient
+#from flask.ext.pymongo import PyMongo
+#from pymongo import MongoClient
 
 """ 
 --------------------------------------------
@@ -42,10 +42,10 @@ oauth = OAuth(app)
 app.config.from_object(Config.TestingConfig)
 
 # db startup and variables
-client = MongoClient(TestingConfig.MONGO_URI)
-db = client[TestingConfig.MONGO_DBNAME]
-jobs = db.jobs
-results = db.results
+# client = MongoClient(TestingConfig.MONGO_URI)
+# db = client[TestingConfig.MONGO_DBNAME]
+# jobs = db.jobs
+# results = db.results
 
 
 # persistence
