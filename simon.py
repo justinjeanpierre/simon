@@ -3,7 +3,6 @@
 import Job
 import Result
 import Config
-from Config import DevelopmentConfig, TestingConfig
 
 import os, json, ast
 import jsonpickle
@@ -32,24 +31,37 @@ template_dir = os.path.join(current_dir, 'templates')
 static_dir = os.path.join(current_dir, 'static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-app.debug = True
+app.debug = False
 app.secret_key = 'development'
 oauth = OAuth(app)
 
-# change this when pushing to production
-# app.config.from_object(Config.ProductionConfig)
-# app.config.from_object(Config.DevelopmentConfig)
-app.config.from_object(Config.TestingConfig)
+""" 
+--------------------------------------------
+App Initialization - configuration variables
+--------------------------------------------
+"""
+
+# change config when pushing to production
+
+# production config:
+app.config.from_object(Config.ProductionConfig)
+app.current_config = Config.ProductionConfig
+
+# development config:
+#app.config.from_object(Config.DevelopmentConfig)
+#app.current_config = Config.DevelopmentConfig
+
+# testing config:
+#app.config.from_object(Config.TestingConfig)
+#app.current_config = Config.TestingConfig
 
 # db startup and variables
-client = MongoClient(TestingConfig.MONGO_URI)
-db = client[TestingConfig.MONGO_DBNAME]
+client = MongoClient(app.current_config.MONGO_URI)
+db = client[app.current_config.MONGO_DBNAME]
 jobs = db.jobs
 results = db.results
 
 
-# persistence
-# mongo = PyMongo(app)
 @app.before_request
 def before_request():
     g.user = None
@@ -68,8 +80,8 @@ Twitter Login
 
 twitter = oauth.remote_app(
     'twitter',
-    consumer_key=DevelopmentConfig.TWITTER_KEY,
-    consumer_secret=DevelopmentConfig.TWITTER_SECRET,
+    consumer_key = app.current_config.TWITTER_KEY,
+    consumer_secret = app.current_config.TWITTER_SECRET,
     base_url='https://api.twitter.com/1.1/',
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
@@ -104,8 +116,8 @@ Google Login
 --------------------------------------------
 """
 
-app.config['GOOGLE_ID'] = DevelopmentConfig.GOOGLE_KEY
-app.config['GOOGLE_SECRET'] = DevelopmentConfig.GOOGLE_SECRET
+app.config['GOOGLE_ID'] = app.current_config.GOOGLE_KEY
+app.config['GOOGLE_SECRET'] = app.current_config.GOOGLE_SECRET
 
 google = oauth.remote_app(
     'google',
@@ -149,8 +161,8 @@ Facebook Login
 --------------------------------------------
 """
 
-FACEBOOK_APP_ID = DevelopmentConfig.FACEBOOK_KEY
-FACEBOOK_APP_SECRET = DevelopmentConfig.FACEBOOK_SECRET
+FACEBOOK_APP_ID = app.current_config.FACEBOOK_KEY
+FACEBOOK_APP_SECRET = app.current_config.FACEBOOK_SECRET
 
 facebook = oauth.remote_app(
     'facebook',
@@ -362,4 +374,4 @@ app startup
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run()
