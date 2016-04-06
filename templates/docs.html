@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block full_title %}Simon{% endblock %}
+
+{% block content %}
+  <div class="row"><div class="col-md-12">
+    <div class="jumbotron">
+      <h2>API | Documentation</h2>
+    </div>
+    <p>
+      The API entrypoint is <a href="{{ url_for('index') }}">https://polar-mesa-55692.herokuapp.com/</a>
+    </p>
+
+    <h3>Simulations</h3>    
+    <table class="table table-responsive table-striped table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Scope</th>
+          <th>Semantics</th>
+          <th>Permission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/jobs</td>
+          <td>retrieve a user's simulations</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/jobs/:id</td>
+          <td>retrieve a single job</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/jobs</td>
+          <td>create a new job</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/jobs/:id</td>
+          <td>update an existing job</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/jobs/:id</td>
+          <td>delete and cancel a simulation</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Simulation results</h3>    
+    <table class="table table-responsive table-striped table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Scope</th>
+          <th>Semantics</th>
+          <th>Permission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/results</td>
+          <td>retrieve a user's results</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/results/:id</td>
+          <td>retrieve a single simulation result</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/results/:id</td>
+          <td>delete a result</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div></div>
+{% endblock %}

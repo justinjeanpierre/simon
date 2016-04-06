@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block full_title %}Simon{% endblock %}
+
+{% block content %}
+	<div class="row"><div class="col-md-6">
+        <h2 class="page-header">{% block title %}Log In{% endblock %}</h2>
+        <h3>Sign in with your Social Media Account!</h3>
+        <h2>
+      		<a href="{{ url_for('twitter_login') }}"><img src="{{url_for('static', filename='twitter-sign-in.png') }}" alt="sign in"></a>
+            <a href="{{ url_for('google_login') }}"><img src="{{url_for('static', filename='google-sign-in.png') }}" alt="sign in"></a>
+            <a href="{{ url_for('facebook_login')}}"><img src="{{url_for('static', filename='facebook-sign-in.png') }}" alt="sign in"></a>
+    	</h2>
+    </div></div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-5">
+				<h2 class="page-header">{% block title %}Run Simulation{% endblock %}</h2>
+				<form method="post" class="form-horizontal" action="/jobs">
+	            	<div class="form-group">
+	                	<div class="col-sm-2"></div>
+	            	</div>
+	            	<label for="nc">Number of Cores:</label>
+	            	<input type="text" class="form-control" name="GENERAL_TOTAL_CORES" id = "nc" value="{{request.form.GENERAL_TOTAL_CORES}}">
+	            	<p></p>
+	            	<label for="np">Number of Processes:</label>
+	            	<input type="text" class="form-control" name="GENERAL_NUM_PROCESSES" id = "np" value="{{request.form.GENERAL_NUM_PROCESSES}}">
+	            	<p></p>
+	            	<label for="mf">Maximum Frequency:</label>
+	            	<input type="text" class="form-control" name="GENERAL_MAX_FREQUENCY" id = "mf" value="{{request.form.GENERAL_MAX_FREQUENCY}}">
+	            	<p></p>
+	            	<label for="mt">Temperature:</label>
+	            	<input type="text" class="form-control" name="GENERAL_TEMPERATURE" id = "mt" value="{{request.form.GENERAL_TEMPERATURE}}">
+	            	<p></p>
+	            	<div class="checkbox">
+      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_CORE" value="true">Enable Modeling Core</label>
+    				</div>
+    				<div class="checkbox">
+      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_POWER" value="true">Enable Modeling Power</label>
+    				</div>
+    				<div class="checkbox">
+      					<label><input type="checkbox" name="GENERAL_ENABLE_MODELING_AREA" value="true">Enable Modeling Area</label>
+    				</div>
+      				<p></p>
+					<div class="form-group">
+						<div class="col-sm-offset-0 col-sm-1">
+	                		<button type="submit" class="btn btn-primary">Run Simulation</button>
+	        			</div>
+	        		</div>
+    			</form>
+		</div>
+	</div>
+{% endblock %}
