@@ -67,11 +67,10 @@ class ResultsRoutesTestCasePOST(unittest.TestCase):
 		pass
 
 	def test_post_results(self):
-		response = self.app.post('/results')
+		d = dict(maximum_frequency=1000)
+		response = self.app.post('/results', data=d)
 		
-		assert response.status == '501 NOT IMPLEMENTED'
-		
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '200 OK'
 
 
 if __name__ == '__main__':

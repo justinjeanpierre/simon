@@ -300,18 +300,23 @@ def get_result(result_id):
     
 @app.route('/results', methods=['POST'])
 def post_result():
-    # validate results returned from simulator,
-    # create a Result object,
-    # save it in the db.
-
-    return '', 501
     
-    # probably something like this:
-#    user_results = Result.Result.find_by_user_id(g.user, results)
-#    if user_results is not None:
-#        return jsonpickle.encode(user_results), 200
-#    else:
-#        return '', 501
+    form_data = request.form
+    
+    if len(form_data.keys()) == 0:
+        return '', 400
+    else:
+        # create a Result object
+        result = Result.Result()
+        
+        # populate it
+        result.update(form_data)
+        # save it
+        result.save(results)
+        
+        return '', 200 # should return new Result's id
+
+    return '', 500    
 
 # stats routes
 @app.route('/stats', methods=['GET'])

@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import requests
+
 class Result:
 	def __init__(self):
 		self.id = None # string?
@@ -7,10 +9,20 @@ class Result:
 		self.status = None # some custom enum-ish type ?
 		self.parameters = {} # an empty dictionary
 		
+	def update(self, dict):
+		for key in dict.keys():
+			for k in self.parameters:
+				if k == key:
+					#figure out types (num -> num, string -> string, etc.)
+					# (validate first, maybe?)
+					self.parameters[k] = dict[key]
+		
+		
 	# should be called when Simulator returns results
 	def save(self, mongoCollection = None):
 		# (should check db to see if this Result exists first)
 		return mongoCollection.insert_one({'identifier':self.id, 'owner':self.owner, 'status':self.status, 'result_parameters':self.parameters})
+		
 		
 	@classmethod
 	def find_by_id(_class, result_id, user_id, mongoCollection = None):
