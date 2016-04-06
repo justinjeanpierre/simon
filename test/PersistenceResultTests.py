@@ -22,18 +22,21 @@ class ResultPersistenceTestCase(unittest.TestCase):
 		self.test_result = Result.Result()
 		test_result = {'identifier':'test_result_identifier'}
 		test_result = {'identifier':987654321}
-		self.results.insert_one(test_result)
 
 		# some available stuff
 		self.test_store_result_identifier = 8765
 		self.test_store_result_owner = 'SOME_RESULT_OWNER'
 		self.test_store_result_status = 'SOME_RESULT_STATUS'
+
+		self.results.insert_one({'identifier':self.test_store_result_identifier, 'owner':self.test_store_result_owner, 'status':self.test_store_result_status})
+		self.results.insert_one({'identifier':'test_result_identifier', 'owner':self.test_store_result_owner, 'status':self.test_store_result_status})
+		self.results.insert_one({'identifier':987654321, 'owner':self.test_store_result_owner, 'status':self.test_store_result_status})
 		
 	def tearDown(self):
 		# remove test data from test db
+		self.results.delete_many({'identifier':self.test_store_result_identifier})
 		self.results.delete_many({'identifier':'test_result_identifier'})
 		self.results.delete_many({'identifier':987654321})
-		self.results.delete_many({'identifier':self.test_store_result_identifier})
 		
 	def test_store_result(self):
 		_result = Result.Result()
@@ -58,10 +61,22 @@ class ResultPersistenceTestCase(unittest.TestCase):
 		# populate the empty Result with db data
 		res = self.results.find_one({'identifier':_result.id}) 
 		if res is not None:
-			saved_result.id = res['identifier']
-			saved_result.owner = res['owner']
-			saved_result.status = res['status']
-			saved_result.parameters = res['result_parameters']
+			try:
+				saved_result.id = res['identifier']
+			except:
+				pass
+			try:
+				saved_result.owner = res['owner']
+			except:
+				pass
+			try:
+				saved_result.status = res['status']
+			except:
+				pass
+			try:
+				saved_result.parameters = res['result_parameters']
+			except:
+				pass
 		
 		# compare db data with test Result
 		assert saved_result is not None
@@ -72,12 +87,12 @@ class ResultPersistenceTestCase(unittest.TestCase):
 
 	def test_retrieve_result(self): #(not a useful test, just checking)
 		# get a result back from the test db
-		_result = Result.Result.find_by_id(987654321, self.results)
+		_result = Result.Result.find_by_id(987654321, self.test_store_result_owner, self.results)
 
 		assert _result is not None
 		assert _result.id == 987654321
-		assert _result.owner is None
-		assert _result.status is None
+		assert _result.owner == self.test_store_result_owner
+		assert _result.status == self.test_store_result_status
 
 class ResultPersistenceTestCaseUser(unittest.TestCase):
 	def setUp(self):
@@ -89,10 +104,10 @@ class ResultPersistenceTestCaseUser(unittest.TestCase):
 		# put something in it
 		self.test_result = Result.Result()
 		self.test_result.id = 'test_ResultPersistenceTestCaseUser'
-		self.test_result.owner = '_test_owner_id'
+		self.test_result.owner = 'test_owner_id'
 		self.test_result.status = 'test status'
 		
-		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'result_parameters':self.test_result.parameters})
 		
 	def tearDown(self):
 		# remove test Result from test db
@@ -101,7 +116,7 @@ class ResultPersistenceTestCaseUser(unittest.TestCase):
 	def test_find_result_by_user(self):
 		res = Result.Result.find_by_user_id(self.test_result.owner, self.results)
 		
-		assert res.owner == self.test_result.owner
+		assert res[0].owner == self.test_result.owner
 		
 	def test_find_job_by_user_missing_user_id(self):
 		res = Result.Result.find_by_user_id(None, self.results)
@@ -126,14 +141,14 @@ class ResultPersistenceTestCaseResult(unittest.TestCase):
 		self.test_result.owner = '_test_owner_id'
 		self.test_result.status = 'a status'
 		
-		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'result_parameters':self.test_result.parameters})
 		
 	def tearDown(self):
 		# remove test Result from the test db
 		self.results.delete_many({'identifier':self.test_result.id})
 
 	def test_find_result_by_id(self):
-		res = Result.Result.find_by_id(self.test_result.id, self.results)
+		res = Result.Result.find_by_id(self.test_result.id, self.test_result.owner, self.results)
 		
 		assert res.id == self.test_result.id
 		

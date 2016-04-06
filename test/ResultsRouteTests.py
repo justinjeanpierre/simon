@@ -31,29 +31,33 @@ class ResultsRoutesTestCaseGET(unittest.TestCase):
 		self.results = self.db.results
 		
 		self.test_result = Result.Result()
-		self.test_result.id = str(514514)
 		self.test_result.owner = 'test_RESULTS_ROUTE_TESTS_owner'
 		self.test_result.status = 'test_RESULTS_ROUTE_TESTS_status'
 		
-		self.results.insert_one({'identifier':self.test_result.id, 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1001), 'owner':self.test_result.owner, 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1002), 'owner':str(115122217971165854689), 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1003), 'owner':str(115122217971165854689), 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1004), 'owner':str(2593451828), 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1005), 'owner':str(2593451828), 'status':self.test_result.status, 'parameters':self.test_result.parameters})
+		self.results.insert_one({'identifier':str(1006), 'owner':str(2593451828), 'status':self.test_result.status, 'parameters':self.test_result.parameters})
 
 	def tearDown(self):
 		# remove test data from test db
 		self.results.delete_many({'identifier':self.test_result.id})
-		pass
+		self.results.delete_many({'owner':'test_RESULTS_ROUTE_TESTS_owner'})
+		self.results.delete_many({'owner':str(115122217971165854689)})
+		self.results.delete_many({'owner':str(2593451828)})
+
+	def test_get_result(self):
+		response = self.app.get('/results/1000')
+		
+		assert response.status == '401 UNAUTHORIZED'
 
 	def test_get_results(self):
 		response = self.app.get('/results')
 		
-		assert response.status == '200 OK'
-		
-	def test_get_result(self):
-		response = self.app.get('/results/514514')
-		
-		assert '514514' in response.data
-		
-		assert response.status == '200 OK'
-
+		assert response.status == '401 UNAUTHORIZED'
+	
 
 class ResultsRoutesTestCasePOST(unittest.TestCase):
 	def setUp(self):
@@ -63,11 +67,10 @@ class ResultsRoutesTestCasePOST(unittest.TestCase):
 		pass
 
 	def test_post_results(self):
-		response = self.app.post('/results')
+		d = dict(maximum_frequency=1000)
+		response = self.app.post('/results', data=d)
 		
-		assert response.status == '501 NOT IMPLEMENTED'
-		
-		assert response.status == '501 NOT IMPLEMENTED'
+		assert response.status == '200 OK'
 
 
 if __name__ == '__main__':

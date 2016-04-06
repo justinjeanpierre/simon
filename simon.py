@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-# import Job
-# import Result
+import Job
+import Result
 import Config
 from Config import DevelopmentConfig, TestingConfig
 
@@ -14,8 +14,8 @@ from flask import redirect, render_template
 from flask_oauthlib.client import OAuth, OAuthException
 
 # persistence
-#from flask.ext.pymongo import PyMongo
-#from pymongo import MongoClient
+from flask.ext.pymongo import PyMongo
+from pymongo import MongoClient
 
 """ 
 --------------------------------------------
@@ -41,10 +41,10 @@ oauth = OAuth(app)
 app.config.from_object(Config.TestingConfig)
 
 # db startup and variables
-# client = MongoClient(TestingConfig.MONGO_URI)
-# db = client[TestingConfig.MONGO_DBNAME]
-# jobs = db.jobs
-# results = db.results
+client = MongoClient(TestingConfig.MONGO_URI)
+db = client[TestingConfig.MONGO_DBNAME]
+jobs = db.jobs
+results = db.results
 
 
 # persistence
@@ -53,11 +53,11 @@ app.config.from_object(Config.TestingConfig)
 def before_request():
     g.user = None
     if 'twitter_oauth' in session:
-        g.user = session['twitter_oauth']
+        g.user = session['twitter_oauth']['user_id']
     elif 'google_token' in session:
-        g.user = session['google_token']
+        g.user = json.loads(getattr(google.get('userinfo'), 'raw_data'))['id']
     elif 'facebook_token' in session:
-        g.user = session['facebook_token']
+        g.user = json.loads(getattr(facebook.get('/me'), 'raw_data'))['id']
 
 """ 
 --------------------------------------------
@@ -199,55 +199,57 @@ Form functions
 --------------------------------------------
 """
 
-# set up mongo here
-
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#   get a list of all jobs
-#   (...to which this authenticated user has access)    
+#   get the authenticated user's jobs
 
-    return '', 501
-    
-    # probably something like this:
-#    user_jobs = Job.Job.find_by_user_id(g.user, jobs)
-#    if user_jobs is not None:
-#        return jsonpickle.encode(user_jobs), 200
-#    else:
-#        return '', 501
-   
+    if g.user is not None:
+        user_jobs = Job.Job.find_by_user_id(g.user, jobs)
+        
+        if user_jobs is not None:
+            return jsonpickle.encode(user_jobs), 200
+        else:
+            return '', 501
+    else:
+        return '', 401
+
 @app.route('/jobs/<job_id>', methods=['GET'])
 def get_job(job_id):
 #   get a specific job
 
-    job = Job.Job.find_by_id(str(job_id), jobs)
+    job = Job.Job.find_by_id(str(job_id), g.user, jobs)
+    
+    if g.user is None:
+        return '', 401
 
     if job is not None:
         return jsonpickle.encode(job), 200
     else:
-        return job_id, 500
+        return 'Invalid or unauthorized id: ' + str(job_id), 404
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
-	# create a job
-    # to submit a job:
-    # get request parameters (form data?)
-    # create object, populate with request data
-    # save in db
-    # serialize and send to simulator
-    #job = Job.Job()
-    url = "http://104.200.30.65:8889/"
-    user_input = request.form
-    #job.update(user_input)
+    # make sure user is authenticated
+    if g.user is None:
+        return '', 401
     
-    if len(user_input.keys()) == 0:
-        # this is a request sent without
-        # simulator parameters.
-        # it should be rejected.
+    if len(request.form.keys()) == 0:
+        # request must have simulator parameters.
         return '', 400
     else:
-        shit = requests.post(url, data=json.dumps(user_input)).text
-        return shit, 200
+        # create a Job object
+        job = Job.Job()
+        # set the owner to the current user
+        job.owner = g.user
+        # populate with supplied parameters
+        job.update(request.form)
+        # save to db
+        new_job_id = job.save(jobs)
+        # send to simulator
+        job.submit() # callback?
+        
+        return jsonpickle.encode({'identifier':new_job_id}), 200
     
 @app.route('/jobs/<job_id>', methods=['PUT'])
 def put_job(job_id):
@@ -262,8 +264,17 @@ def delete_job(job_id):
 # results routes
 @app.route('/results', methods=['GET'])
 def get_results():
-#   get a list of all results
-#   (...to which this authenticated user has access)
+#   get a list of all results to which this authenticated user has access
+
+    if g.user is not None:
+        user_results = Result.Result.find_by_user_id(g.user, results)
+        
+        if user_results is not None:
+            return jsonpickle.encode(user_results), 200
+        else:
+            return '', 501
+    else:
+        return '', 401
 
     print request.json
     return render_template('results.html'), 200
@@ -272,27 +283,31 @@ def get_results():
 def get_result(result_id):
 #   get one of the user's results
 
-    result = Result.Result.find_by_id(str(result_id), results)
+    result =  Result.Result.find_by_id(str(result_id), g.user, results)
+
+    if g.user is None:
+        return '', 401
 
     if result is not None:
         return jsonpickle.encode(result), 200
     else:
-        return result_id, 500
-
+        return 'Invalid or unauthorized id: ' + str(result_id), 404
+    
 @app.route('/results', methods=['POST'])
 def post_result():
-    # validate results returned from simulator,
-    # create a Result object,
-    # save it in the db.
-
-    return '', 501
     
-    # probably something like this:
-#    user_results = Result.Result.find_by_user_id(g.user, results)
-#    if user_results is not None:
-#        return jsonpickle.encode(user_results), 200
-#    else:
-#        return '', 501
+    if len(request.form.keys()) == 0:
+        return '', 400
+    else:
+        # create a Result object
+        result = Result.Result()
+        
+        # populate it
+        result.update(request.form)
+        # save it
+        new_result_id = result.save(results)        
+
+        return jsonpickle.encode({'identifier':new_result_id}), 200 # should return new Result's id
 
 # stats routes
 @app.route('/stats', methods=['GET'])
@@ -337,7 +352,13 @@ def show_faq():
 @app.route('/run', methods=['GET'])
 def run_simulation():
     return render_template('simulation.html')
-	
+
+"""
+--------------------------------------------
+app startup
+--------------------------------------------
+"""
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8889))
     app.run(host='0.0.0.0', port=port)
