@@ -227,7 +227,7 @@ def get_job(job_id):
     if job is not None:
         return jsonpickle.encode(job), 200
     else:
-        return 'Invalid simulation id: ' + str(job_id), 404
+        return 'Invalid or unauthorized id: ' + str(job_id), 404
     
 @app.route('/jobs', methods=['POST'])
 def post_job():
@@ -282,13 +282,7 @@ def get_results():
 def get_result(result_id):
 #   get one of the user's results
 
-#    result = Result.Result.find_by_id(str(result_id), results)
-#
-#    if result is not None:
-#        return jsonpickle.encode(result), 200
-#    else:
-#        return result_id, 500
-    result =  Result.Result.find_by_id(str(result_id), g.user, jobs)
+    result =  Result.Result.find_by_id(str(result_id), g.user, results)
 
     if g.user is None:
         return '', 401
@@ -296,7 +290,7 @@ def get_result(result_id):
     if result is not None:
         return jsonpickle.encode(result), 200
     else:
-        return 'Invalid simulation id: ' + str(result_id), 404
+        return 'Invalid or unauthorized id: ' + str(result_id), 404
     
 @app.route('/results', methods=['POST'])
 def post_result():
@@ -312,11 +306,9 @@ def post_result():
         # populate it
         result.update(form_data)
         # save it
-        result.save(results)
-        
-        return '', 200 # should return new Result's id
+        new_id = result.save(results)        
 
-    return '', 500    
+        return jsonpickle.encode({'identifier':new_id}), 200 # should return new Result's id
 
 # stats routes
 @app.route('/stats', methods=['GET'])
