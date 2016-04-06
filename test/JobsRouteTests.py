@@ -79,14 +79,13 @@ class JobsRouteTestCasePOST(unittest.TestCase):
 	def test_post_job_no_data(self):
 		response = self.app.post('/jobs')
 		
-		assert response.status == '400 BAD REQUEST'
+		assert response.status == '401 UNAUTHORIZED'
 
 	def test_post_job_with_params(self):
 		d = dict(maximum_frequency=1000)
 		response = self.app.post('/jobs', data=d)
 		
-		assert '\"maximum_frequency\": \"1000\"' in response.data
-		assert response.status == '200 OK'
+		assert response.status == '401 UNAUTHORIZED'
 
 
 if __name__ == '__main__':

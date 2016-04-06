@@ -4,6 +4,8 @@ import SimulatorParameters
 from flask.ext.pymongo import PyMongo
 from flask import g
 
+import requests
+
 class Job:
 	def __init__(self):
 		self.id = None # string
@@ -15,19 +17,18 @@ class Job:
 		# add params from user's input
 		# (will accept dictionary of parameters)
 		
-		# load supplied values
-
+		# parse supplied values
 		for key in dict.keys():
 			for k in self.simulator_parameters:
 				if k == key:
-					#figure out types (num -> num, string -> string, etc.)
 					# (validate first, maybe?)
 					self.simulator_parameters[k] = dict[key]
 		
 	def submit(self):
-		# save user input
-		# send to simulator (104.200.30.65)
-		pass
+		try:
+			req = requests.post('http://104.200.30.65/', data = {'simulator_parameters':self.simulator_parameters}) # callback or completion handler?
+		except:
+			print 'could not connect to simulator'
 		
 	def cancel(self):
 		# just delete it from the database
@@ -36,7 +37,18 @@ class Job:
 
 	def save(self, mongoCollection = None):
 		# (should check db to see if this job exists first)
-		return mongoCollection.insert_one({'identifier':self.id, 'owner':self.owner, 'status':self.status, 'simulator_parameters':self.simulator_parameters})
+		op_result = mongoCollection.insert_one({'identifier':self.id, 'owner':self.owner, 'status':self.status, 'simulator_parameters':self.simulator_parameters})
+		
+		# get the newly-created object's _id
+		object_id_str = str(op_result.inserted_id)
+
+		# get the last 8 characters of the object id
+		new_id = object_id_str[len(object_id_str)-8:]
+
+		# update 'identifier' field with new_id
+		mongoCollection.update_one({'_id':op_result.inserted_id}, {'$set':{'identifier':new_id}}, upsert=False)
+		 		
+		return new_id
 		
 	@classmethod
 	def find_by_id(_class, job_id, user_id, mongoCollection = None):
@@ -60,6 +72,7 @@ class Job:
 		# this query needs to have the currently logged-in user's identifier
 		# passed in as the owner, or else everyone's jobs will be returned
 		res = mongoCollection.find_one({'identifier':job_id, 'owner':user_id}, {'_id':0}) # we don't need the object's _id
+		
 		if res is not None:
 			tempJob = Job()
 			
