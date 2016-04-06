@@ -128,3 +128,48 @@ class Result:
 			pass
 			
 		return retval
+
+	@classmethod
+	def all_results(_class, mongoCollection = None):
+		
+		if mongoCollection == None:
+			return None
+			
+		res = mongoCollection.find({}, {'_id':0, 'result_parameters': 0})
+		# this query should not be find_one, we
+		# are looking for ALL of a user's results.
+		
+		retval = []
+
+		if res is not None:
+			
+			print res
+
+			for d in list(res):
+				r = Result()
+				
+				try:
+					r.id = d['identifier']
+				except:
+					pass
+				
+				try:
+					r.owner = d['owner']
+				except:
+					pass
+				
+				try:
+					r.status = d['status']
+				except:
+					pass
+				
+				try:
+					r.parameters = d['result_parameters']
+				except:
+					pass
+			
+				retval.append(r)
+		else:
+			pass
+			
+		return retval
