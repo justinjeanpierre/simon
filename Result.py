@@ -20,16 +20,16 @@ class Result:
 	# should be called when Simulator returns results
 	def save(self, mongoCollection = None):
 		# (should check db to see if this Result exists first)
-		val = mongoCollection.insert_one({'identifier':self.id, 'owner':self.owner, 'status':self.status, 'result_parameters':self.parameters})
+		op_result = mongoCollection.insert_one({'identifier':self.id, 'owner':self.owner, 'status':self.status, 'result_parameters':self.parameters})
 		
 		# get the newly-created object's _id
-		object_id_str = str(val.inserted_id)
+		object_id_str = str(op_result.inserted_id)
 
 		# get the last 8 characters of the object id
 		new_id = object_id_str[len(object_id_str)-8:]
 
 		# update 'identifier' field with new_id
-		mongoCollection.update_one({'_id':val.inserted_id}, {'$set':{'identifier':new_id}}, upsert=False)
+		mongoCollection.update_one({'_id':op_result.inserted_id}, {'$set':{'identifier':new_id}}, upsert=False)
 		
 		return new_id
 	

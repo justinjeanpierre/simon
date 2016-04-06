@@ -262,8 +262,7 @@ def delete_job(job_id):
 # results routes
 @app.route('/results', methods=['GET'])
 def get_results():
-#   get a list of all results
-#   (...to which this authenticated user has access)
+#   get a list of all results to which this authenticated user has access
 
     if g.user is not None:
         user_results = Result.Result.find_by_user_id(g.user, results)
@@ -295,20 +294,18 @@ def get_result(result_id):
 @app.route('/results', methods=['POST'])
 def post_result():
     
-    form_data = request.form
-    
-    if len(form_data.keys()) == 0:
+    if len(request.form.keys()) == 0:
         return '', 400
     else:
         # create a Result object
         result = Result.Result()
         
         # populate it
-        result.update(form_data)
+        result.update(request.form)
         # save it
-        new_id = result.save(results)        
+        new_result_id = result.save(results)        
 
-        return jsonpickle.encode({'identifier':new_id}), 200 # should return new Result's id
+        return jsonpickle.encode({'identifier':new_result_id}), 200 # should return new Result's id
 
 # stats routes
 @app.route('/stats', methods=['GET'])
