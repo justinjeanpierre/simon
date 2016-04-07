@@ -66,6 +66,7 @@ if environment is 'prod':
     FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
     FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 elif environment is 'dev':
+    import Config
     MONGO_DBNAME = Config.DevelopmentConfig.MONGO_DBNAME
     MONGO_URI = Config.DevelopmentConfig.MONGO_URI
     TWITTER_KEY = Config.DevelopmentConfig.TWITTER_KEY
