@@ -55,6 +55,7 @@ environment = 'prod' # uncomment this when deploying OR
 
 if environment is 'prod':
     MONGO_DBNAME = os.environ.get('MONGO_DBNAME')
+    MONGOLAB_URI = os.environ.get('MONGOLAB_URI')
     MONGO_URI = os.environ.get('MONGOLAB_URI')
     TWITTER_KEY = os.environ.get('TWITTER_KEY')
     TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
