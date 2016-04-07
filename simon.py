@@ -40,27 +40,53 @@ oauth = OAuth(app)
 App Initialization - configuration variables
 --------------------------------------------
 """
+# keys and ids
 
-# change config when pushing to production
+TWITTER_KEY = None
+TWITTER_SECRET = None
+GOOGLE_KEY = None
+GOOGLE_SECRET = None
+FACEBOOK_KEY = None
+FACEBOOK_SECRET = None
 
-# production config:
-app.config.from_object(Config.ProductionConfig)
-app.current_config = Config.ProductionConfig
+# config and env variables
+environment = 'prod' # uncomment this when deploying OR
+#environment = 'dev' # uncomment this when running or modifying locally
 
-# development config:
-#app.config.from_object(Config.DevelopmentConfig)
-#app.current_config = Config.DevelopmentConfig
-
-# testing config:
-#app.config.from_object(Config.TestingConfig)
-#app.current_config = Config.TestingConfig
+if environment is 'prod':
+    MONGO_DBNAME = os.environ.get('MONGO_DBNAME')
+    MONGOLAB_URI = os.environ.get('MONGOLAB_URI')
+    MONGO_URI = os.environ.get('MONGOLAB_URI')
+    TWITTER_KEY = os.environ.get('TWITTER_KEY')
+    TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+    GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
+    GOOGLE_SECRET = os.environ.get('GOOGLE_SECRET')
+    FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
+    FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
+elif environment is 'dev':
+    MONGO_DBNAME = 'simon_dev'
+    MONGO_URI = 'mongodb://localhost:27017/simon_dev'
+    TWITTER_KEY = Config.DevelopmentConfig.TWITTER_KEY
+    TWITTER_SECRET = Config.DevelopmentConfig.TWITTER_SECRET
+    GOOGLE_KEY = Config.DevelopmentConfig.GOOGLE_KEY
+    GOOGLE_SECRET = Config.DevelopmentConfig.GOOGLE_SECRET
+    FACEBOOK_KEY = Config.DevelopmentConfig.FACEBOOK_KEY
+    FACEBOOK_SECRET = Config.DevelopmentConfig.FACEBOOK_SECRET
+else:
+    MONGO_DBNAME = 'simon_test'
+    MONGO_URI = 'mongodb://localhost:27017/simon_test'
+    TWITTER_KEY = None
+    TWITTER_SECRET = None
+    GOOGLE_KEY = None
+    GOOGLE_SECRET = None
+    FACEBOOK_KEY = None
+    FACEBOOK_SECRET = None
 
 # db startup and variables
-client = MongoClient(app.current_config.MONGO_URI)
-db = client[app.current_config.MONGO_DBNAME]
+client = MongoClient(MONGO_URI)
+db = client[MONGO_DBNAME]
 jobs = db.jobs
 results = db.results
-
 
 @app.before_request
 def before_request():
@@ -80,8 +106,8 @@ Twitter Login
 
 twitter = oauth.remote_app(
     'twitter',
-    consumer_key = app.current_config.TWITTER_KEY,
-    consumer_secret = app.current_config.TWITTER_SECRET,
+    consumer_key = TWITTER_KEY,
+    consumer_secret = TWITTER_SECRET,
     base_url='https://api.twitter.com/1.1/',
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
@@ -116,13 +142,10 @@ Google Login
 --------------------------------------------
 """
 
-app.config['GOOGLE_ID'] = app.current_config.GOOGLE_KEY
-app.config['GOOGLE_SECRET'] = app.current_config.GOOGLE_SECRET
-
 google = oauth.remote_app(
     'google',
-    consumer_key=app.config.get('GOOGLE_ID'),
-    consumer_secret=app.config.get('GOOGLE_SECRET'),
+    consumer_key = GOOGLE_KEY,
+    consumer_secret = GOOGLE_SECRET,
     request_token_params={
         'scope': 'email'
     },
@@ -161,13 +184,10 @@ Facebook Login
 --------------------------------------------
 """
 
-FACEBOOK_APP_ID = app.current_config.FACEBOOK_KEY
-FACEBOOK_APP_SECRET = app.current_config.FACEBOOK_SECRET
-
 facebook = oauth.remote_app(
     'facebook',
-    consumer_key=FACEBOOK_APP_ID,
-    consumer_secret=FACEBOOK_APP_SECRET,
+    consumer_key = FACEBOOK_KEY,
+    consumer_secret = FACEBOOK_SECRET,
     request_token_params={'scope': 'email'},
     base_url='https://graph.facebook.com',
     request_token_url=None,
@@ -215,7 +235,7 @@ Form functions
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#   get the authenticated user's jobs
+#   get the current user's jobs
 
     if g.user is not None:
         user_jobs = Job.Job.find_by_user_id(g.user, jobs)
@@ -290,7 +310,7 @@ def get_results():
     else:
         return '', 401
 
-    return render_template('results.html')
+    return render_template('results.html'), 200
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
