@@ -42,7 +42,7 @@ App Initialization - configuration variables
 """
 
 # config and env variables
-environment = 'prod' # || 'prod'
+environment = 'dev' # || 'prod'
 
 if environment is 'prod':
     MONGO_DBNAME = os.environ.get('MONGO_DBNAME')
@@ -56,12 +56,12 @@ if environment is 'prod':
 elif environment is 'dev':
     MONGO_DBNAME = 'simon_dev'
     MONGO_URI = 'mongodb://localhost:27017/simon_dev'
-    TWITTER_KEY = DevelopmentConfig.TWITTER_KEY
-    TWITTER_SECRET = DevelopmentConfig.TWITTER_SECRET
-    GOOGLE_KEY = DevelopmentConfig.GOOGLE_KEY
-    GOOGLE_SECRET = DevelopmentConfig.GOOGLE_SECRET
-    FACEBOOK_KEY = DevelopmentConfig.FACEBOOK_KEY
-    FACEBOOK_SECRET = DevelopmentConfig.FACEBOOK_SECRET
+    TWITTER_KEY = Config.DevelopmentConfig.TWITTER_KEY
+    TWITTER_SECRET = Config.DevelopmentConfig.TWITTER_SECRET
+    GOOGLE_KEY = Config.DevelopmentConfig.GOOGLE_KEY
+    GOOGLE_SECRET = Config.DevelopmentConfig.GOOGLE_SECRET
+    FACEBOOK_KEY = Config.DevelopmentConfig.FACEBOOK_KEY
+    FACEBOOK_SECRET = Config.DevelopmentConfig.FACEBOOK_SECRET
 else:
     MONGO_DBNAME = 'simon_test'
     MONGO_URI = 'mongodb://localhost:27017/simon_test'
@@ -226,7 +226,7 @@ Form functions
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#   get the current user's jobs
+#   get the authenticated user's jobs
 
     if g.user is not None:
         user_jobs = Job.Job.find_by_user_id(g.user, jobs)
