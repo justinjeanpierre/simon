@@ -40,6 +40,14 @@ oauth = OAuth(app)
 App Initialization - configuration variables
 --------------------------------------------
 """
+# keys and ids
+
+TWITTER_KEY = None
+TWITTER_SECRET = None
+GOOGLE_KEY = None
+GOOGLE_SECRET = None
+FACEBOOK_KEY = None
+FACEBOOK_SECRET = None
 
 # config and env variables
 environment = 'dev' # || 'prod'
@@ -77,7 +85,6 @@ client = MongoClient(MONGO_URI)
 db = client[MONGO_DBNAME]
 jobs = db.jobs
 results = db.results
-
 
 @app.before_request
 def before_request():
@@ -226,7 +233,7 @@ Form functions
 # jobs routes
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
-#   get the authenticated user's jobs
+#   get the current user's jobs
 
     if g.user is not None:
         user_jobs = Job.Job.find_by_user_id(g.user, jobs)
@@ -301,7 +308,7 @@ def get_results():
     else:
         return '', 401
 
-    return render_template('results.html')
+    return render_template('results.html'), 200
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
