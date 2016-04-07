@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app.css') }}"/>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-default navbar-static-top">
@@ -22,7 +23,9 @@
                             <li class="{% block nav_docs %}{% endblock %}"><a href="{{ url_for('show_docs') }}">Documentation</a></li>
                             <li class="{% block nav_developers %}{% endblock %}"><a href="{{ url_for('show_dev') }}">Developers</a></li>
                             <li class="{% block nav_sim %}{% endblock %}"><a href="{{ url_for('run_simulation') }}">Run Simulation</a></li>
-                            <li class="{% block nav_results %}{% endblock %}"><a href="{{ url_for('get_results') }}">Results</a></li>
+                            {% if g.user%}
+                                <li class="{% block nav_results %}{% endblock %}"><a href="{{ url_for('get_results') }}">Results</a></li>
+                            {% endif %}
                             <li class="{% block nav_faq %}{% endblock %}"><a href="{{ url_for('show_faq') }}">FAQ</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -39,6 +42,8 @@
     <main class="container">{% block content %}{% endblock %}</main>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/canvasjs.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
+
 </html>

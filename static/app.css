@@ -53,3 +53,17 @@ code {
     font-size: 13px;
     font-weight: normal;
 }
+
+.div1 {
+  background: #999;
+  float: left;
+  height: 100%;
+  width: auto;
+}
+
+.div2 {
+  background: #666;
+  float: right;
+  height: 100%;
+  width: auto;
+}

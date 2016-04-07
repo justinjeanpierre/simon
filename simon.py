@@ -264,9 +264,9 @@ def delete_job(job_id):
 def get_results():
 #   get a list of all results
 #   (...to which this authenticated user has access)
+    results = {"total_mem_accesses": [5202.0, 2920.0, 2954.0, 0.0], "target_instructions": [3525.0, 2007.0, 2031.0, 0.0], "host_initialization_time": 5847098.0, "l1cache_accesses": [513.0, 320.0, 325.0, 0.0], "target_time": [91534.0, 89046.0, 89027.0, 0.0], "host_time": 16250496.0, "host_working_time": 7397564.0, "l2cache_accesses": [283.0, 224.0, 226.0, 0.0], "memory": [41826.0, 29199.0, 29734.0, 0.0], "avg_packet_latency": [24.0288, 21.6333, 20.6379, 6.33333], "total_dram_accesses": [14.0, 8.0, 6.0, 6.0], "host_shutdown_time": 3005834.0, "total_bits_sent": [169536.0, 22784.0, 20736.0, 2880.0], "total_flits_received": [2342.0, 2016.0, 2043.0, 14.0], "l1cache_misses": [181.0, 141.0, 144.0, 0.0], "avg_dram_latency": [113.0, 113.0, 113.0, 113.0], "total_flits_sent": [2649.0, 356.0, 324.0, 45.0], "total_bits_received": [149888.0, 129024.0, 130752.0, 896.0], "num_cores": 4, "execution_units": [2184.0, 1180.0, 1226.0, 0.0], "l2cache_misses": [261.0, 224.0, 226.0, 0.0], "total_packets_sent": [529.0, 252.0, 252.0, 5.0], "l2miss_rate": [92.2261, 100.0, 100.0, 0.0]}
 
-    print request.json
-    return render_template('results.html'), 200
+    return render_template('results.html', results=results), 200
 
 @app.route('/results/<result_id>', methods=['GET'])
 def get_result(result_id):
