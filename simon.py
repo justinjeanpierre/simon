@@ -30,7 +30,6 @@ template_dir = os.path.join(current_dir, 'templates')
 static_dir = os.path.join(current_dir, 'static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-app.debug = False
 app.secret_key = 'development'
 oauth = OAuth(app)
 
@@ -56,6 +55,8 @@ environment = 'prod' # uncomment this when deploying OR
 #environment = 'dev' # uncomment this when running or modifying locally
 
 if environment is 'prod':
+    app.debug = False
+    
     MONGO_DBNAME = os.environ.get('MONGO_DBNAME')
     MONGOLAB_URI = os.environ.get('MONGOLAB_URI')
     MONGO_URI = os.environ.get('MONGOLAB_URI')
@@ -66,6 +67,8 @@ if environment is 'prod':
     FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
     FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 elif environment is 'dev':
+    app.debug = True
+    
     import Config
     MONGO_DBNAME = Config.DevelopmentConfig.MONGO_DBNAME
     MONGO_URI = Config.DevelopmentConfig.MONGO_URI
@@ -397,4 +400,4 @@ app startup
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run()
+    app.run(host='127.0.0.1', port=port)
