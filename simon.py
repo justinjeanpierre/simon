@@ -50,7 +50,8 @@ FACEBOOK_KEY = None
 FACEBOOK_SECRET = None
 
 # config and env variables
-environment = 'dev' # || 'prod'
+environment = 'prod' # uncomment this when deploying OR
+#environment = 'dev' # uncomment this when running or modifying locally
 
 if environment is 'prod':
     MONGO_DBNAME = os.environ.get('MONGO_DBNAME')
