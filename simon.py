@@ -2,7 +2,6 @@
 
 import Job
 import Result
-import Config
 
 import os, json, ast
 import jsonpickle
@@ -40,8 +39,11 @@ oauth = OAuth(app)
 App Initialization - configuration variables
 --------------------------------------------
 """
-# keys and ids
 
+# keys and ids
+MONGO_DBNAME = None
+MONGOLAB_URI = None
+MONGO_URI = None
 TWITTER_KEY = None
 TWITTER_SECRET = None
 GOOGLE_KEY = None
@@ -64,8 +66,8 @@ if environment is 'prod':
     FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
     FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
 elif environment is 'dev':
-    MONGO_DBNAME = 'simon_dev'
-    MONGO_URI = 'mongodb://localhost:27017/simon_dev'
+    MONGO_DBNAME = Config.DevelopmentConfig.MONGO_DBNAME
+    MONGO_URI = Config.DevelopmentConfig.MONGO_URI
     TWITTER_KEY = Config.DevelopmentConfig.TWITTER_KEY
     TWITTER_SECRET = Config.DevelopmentConfig.TWITTER_SECRET
     GOOGLE_KEY = Config.DevelopmentConfig.GOOGLE_KEY
